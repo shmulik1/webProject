@@ -1,0 +1,29 @@
+<body ng-controller="branchesController">
+	<div class="container">
+		<h2>Choose State</h2>
+		<form class="form-horizontal">
+			<select ng-model="state" class="col-sm-4">
+				<option value = "" >All</option>
+				<option value = "north" >North</option>
+				<option value = "south" >South</option>
+				<option value = "dan" >Dan</option>
+			</select>
+		</form>
+    </div>
+	</br>
+
+<!-- container -->
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-4" ng-repeat="bran in brancheslist | filter: bran.state = state">
+				<div class="panel panel-primary">
+					<div class="panel-heading">{{bran.name}}</div>
+					<div class="panel-body">{{bran.address}}</div>
+					<div class="panel-footer">{{bran.phone}}</div>
+					<div class="panel-footer">{{bran.state}}</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br>
+</body>
