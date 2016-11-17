@@ -1,4 +1,4 @@
-<body ng-controller="accountController">
+<body ng-controller="user_ManagementController">
 	<div class="container">
 		<h2>Choose account type</h2>
 		<form class="form-horizontal">
@@ -9,17 +9,20 @@
 				<option value = "customer" >Customer</option>
 				<option value = "supplier" >Supplier</option>
 			</select>
+		</form>
 	</div>
 	</br>
 	<div class="container">
-		<div class="col-sm-4" ng-repeat="user in userslist | filter: user.accountType = accountType">
-			<div class="panel panel-primary">
-				<div class="panel-heading">{{user.firstName}}</div>
-				<div class="panel-body">{{user.id}}</div>
-				<div class="panel-footer">{{user.user}}</div>
-				<div class="panel-footer">{{user.branchesNum}}</div>
-				<div class="panel-footer">{{user.accountType}}</div>
-			</div>
+		<div class="row">
+			<div class="col-sm-4" ng-repeat="user in userslist | filter: user.accountType = accountType">
+				<div class="panel panel-primary">
+					<div class="panel-heading">{{user.firstName}}</div>
+					<div class="panel-body">{{user.id}}</div>
+					<div class="panel-footer">{{user.user}}</div>
+					<div class="panel-footer">{{user.branchesNum}}</div>
+					<div class="panel-footer">{{user.accountType}}</div>
+				</div>
+			</div>	
 		</div>	
 	</div>
 </body>
