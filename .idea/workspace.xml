@@ -3,10 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ca5bf047-a79f-40c5-9f97-a732bfd6b6f8" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lab/public/pages/user_Management.html" afterPath="$PROJECT_DIR$/lab/public/pages/user_Management.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lab/public/script.js" afterPath="$PROJECT_DIR$/lab/public/script.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lab/server.js" afterPath="$PROJECT_DIR$/lab/server.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lab/views/pages/main.ejs" afterPath="$PROJECT_DIR$/lab/views/pages/main.ejs" />
     </list>
     <ignored path="webProject.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -303,7 +299,7 @@
       <workItem from="1478536239831" duration="27000" />
       <workItem from="1478536623944" duration="950000" />
       <workItem from="1478812520860" duration="563000" />
-      <workItem from="1479222994936" duration="16791000" />
+      <workItem from="1479222994936" duration="17406000" />
     </task>
     <task id="LOCAL-00001" summary="/">
       <created>1478536799787</created>
@@ -326,11 +322,18 @@
       <option name="project" value="LOCAL" />
       <updated>1479413196136</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Update 18/11/2016">
+      <created>1479429493388</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1479429493388</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="18331000" />
+    <option name="totallyTimeSpent" value="18946000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1" y="1" width="1598" height="858" extended-state="0" />
@@ -369,7 +372,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="/" />
     <MESSAGE value="Update 17/11/2016" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update 17/11/2016" />
+    <MESSAGE value="Update 18/11/2016" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update 18/11/2016" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
