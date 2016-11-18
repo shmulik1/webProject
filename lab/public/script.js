@@ -1,13 +1,16 @@
 // script.js
 
+
+
     // create the module and name it scotchApp
         // also include ngRoute for all our routing needs
     var scotchApp = angular.module('scotchApp', ['ngRoute']);
 	var currentUser = {
-		userName:"",
+		user:"",
 		password:""
 	};
 	window.isManeger = false;
+    window.isWorker  = false;
 
 	var addUser = function(){
 		var newUser = {
@@ -18,27 +21,52 @@
 			userType: document.getElementById("uType").value
 		}  
 	}
-	
-	var logIn = function(){
-		currentUser.userName = document.getElementById("uname").value;
-		currentUser.password = document.getElementById("pwd").value; 
-		$.ajax({ url:"http://localhost:5557/Login",
-                type: "POST",     
-                data:{
-                userName: currentUser.userName,
-                password: currentUser.password
-            },
-            success: function(data){
-            if(-1 !== data.indexOf("מנהל")){
-                isManeger = true;
-                }
-            },
-            error: function(e){
-                
-            }
-        })               
+
+
+scotchApp.controller('logIn_Controller', function($scope){
+    $scope.logOut = function(){
+        $scope.user = "";
+        $scope.password = "";
+        isManeger = false;
+        isWorker = false;
+        alert("נותקת בהצלחה");
     }
-	
+    $scope.logIn = function(){
+            currentUser.user = document.getElementById("login_username").value;
+            currentUser.password = document.getElementById("login_password").value;
+            //alert("this is document.getElementById('login_username'): " + document.getElementById("login_username"));
+            //alert("this is document.getElementById('login_password'): " + document.getElementById("login_password"));
+            //alert("this is currentUser.user: " + currentUser.user);
+            //alert("this is currentUser.password: " + currentUser.password);
+            //console.log("currentUser.user" + currentUser.user);
+            //console.log("currentUser.password" + currentUser.password);
+            $.ajax({ url:"http://localhost:5557/Login",
+                type: "POST",
+                data:{
+                    user: currentUser.user,
+                    password: currentUser.password
+                },
+                success: function(data) {
+                    //alert("success + data: " + data);
+                    if(-1 !== data.indexOf("manager")){
+                        isManeger = true;
+                        //alert("success + isManeger: " + isManeger);
+                    }
+                    //var type = data[0].accountType;
+                    //if (type === "manager") {
+                    //    isManeger = true;
+                    //}
+                    //if (type === "employee") {
+//
+                    //    isWorker = true;
+                    //}
+                },
+                error: function(e){
+
+                }
+            })
+        }
+    });
 	
     // configure our routes
     scotchApp.config(function($routeProvider) {
@@ -109,18 +137,22 @@
 	var userslist = [];
     scotchApp.controller('user_ManagementController',function($scope,$http) {
 		if(isManeger){
+            alert("Hello - Access Granted");
 			$http.get("http://localhost:5557/userslist").success(function(data){
 			$scope.userslist = data;
 		});
 		}
         else{
-            alert("לא חמוד");
+            alert("Hello - Access Denied");
         }
     });
 
 	
 	//**************************************************************************
+	/*
+
 	scotchApp.controller('loginController', function($scope, $http) {
+	 *//*
       // create a blank object to handle form data.
         $scope.user = {};
 		var formData = new FormData();
@@ -149,3 +181,6 @@
 $scope.myFilter = function (item) { 
 			return item === color; 
 			};
+
+
+			*/
