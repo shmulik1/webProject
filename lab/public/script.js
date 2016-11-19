@@ -9,7 +9,7 @@
 		user:"",
 		password:""
 	};
-	window.isManeger = false;
+	window.isManager = false;
     window.isWorker  = false;
 
 	var addUser = function(){
@@ -23,11 +23,13 @@
 	}
 
 
+
+
 scotchApp.controller('logIn_Controller', function($scope){
     $scope.logOut = function(){
         $scope.user = "";
         $scope.password = "";
-        isManeger = false;
+        isManager = false;
         isWorker = false;
         alert("נותקת בהצלחה");
     }
@@ -48,13 +50,24 @@ scotchApp.controller('logIn_Controller', function($scope){
                 },
                 success: function(data) {
                     //alert("success + data: " + data);
-                    if(-1 !== data.indexOf("manager")){
-                        isManeger = true;
-                        //alert("success + isManeger: " + isManeger);
+                    if ('user or password is incorrect' === data) {
+                        alert('user or password is incorrect');
+                        isManager = false;
+                        isWorker  = false;
+                    }
+                    else if(-1 !== data.indexOf("manager")){
+                        isManager = true;
+                        isWorker = false;
+                        //alert("success + isManager: " + isManager);
+                    }
+                    else if(-1 !== data.indexOf("employee")){
+                        isWorker = true;
+                        isManager = false;
+                        //alert("success + isWorker: " + isWorker);
                     }
                     //var type = data[0].accountType;
                     //if (type === "manager") {
-                    //    isManeger = true;
+                    //    isManager = true;
                     //}
                     //if (type === "employee") {
 //
@@ -72,10 +85,10 @@ scotchApp.controller('logIn_Controller', function($scope){
     scotchApp.config(function($routeProvider) {
         $routeProvider
             // route to home page
-			.when('/home', {
-                templateUrl : 'pages/home.html',
-                controller  : 'homeController'
-            })
+			//.when('/home', {
+            //    templateUrl : 'pages/home.html',
+            //    controller  : 'homeController'
+            //})
 			
 			// route to catalog page
             .when('/catalog', {
@@ -114,12 +127,19 @@ scotchApp.controller('logIn_Controller', function($scope){
 
     // create the controller and inject Angular's $scope
     scotchApp.controller('main_Controller', function($scope) {
+        $scope.user_management_li = false;
+        $scope.show_user_management_li = function () {
+            $scope.user_management_li = true;
+        }
     });
+
 
     scotchApp.controller('aboutController', function($scope) {
      
     });
-	
+
+
+
 	var brancheslist = [];
 	scotchApp.controller('branchesController', function($scope,$http) {
 		$http.get("http://localhost:5557/branches").success(function(data){
@@ -134,14 +154,22 @@ scotchApp.controller('logIn_Controller', function($scope){
 		});
 	
     });
+
+
 	var userslist = [];
     scotchApp.controller('user_ManagementController',function($scope,$http) {
-		if(isManeger){
-            alert("Hello - Access Granted");
+		if(isManager){
+            alert("Hello Manager - Access Granted");
 			$http.get("http://localhost:5557/userslist").success(function(data){
 			$scope.userslist = data;
 		});
 		}
+        else if(isWorker){
+            alert("Hello Worker - Access Granted");
+            $http.get("http://localhost:5557/userslist").success(function(data){
+                $scope.userslist = data;
+            });
+        }
         else{
             alert("Hello - Access Denied");
         }
@@ -184,3 +212,4 @@ $scope.myFilter = function (item) {
 
 
 			*/
+

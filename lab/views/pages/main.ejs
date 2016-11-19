@@ -12,21 +12,6 @@
 	<script src="script.js"></script>
 
 
-
-	<!--script>
-		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-					(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-				m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-		ga('create', 'UA-53164856-2', 'auto');
-		ga('send', 'pageview');
-
-	</script-->
-
-
-
-
 	<style>
 		/* Remove the navbar's default rounded borders and increase the bottom margin */
 		.navbar {
@@ -81,11 +66,15 @@
 		.container > .row > .col-sm-4 > .panel:hover {
 			box-shadow: 0 0 10px 9px rgba(0, 140, 186, 0.5);
 		}
-
 	</style>
 </head>
+
+
+
 <body ng-controller="main_Controller">
 
+
+<!-- carousel -->			<!-- carousel -->			<!-- carousel -->			<!-- carousel -->			<!-- carousel -->			<!-- carousel -->
 <div class="jumbotron">
 	<div id="myCarousel" class="carousel slide" data-ride="carousel">
 		<!-- Indicators -->
@@ -95,7 +84,6 @@
 			<li data-target="#myCarousel" data-slide-to="2"></li>
 			<li data-target="#myCarousel" data-slide-to="3"></li>
 		</ol>
-
 		<!-- Wrapper for slides -->
 		<div class="carousel-inner" role="listbox">
 			<div class="item active">
@@ -134,7 +122,7 @@
 
 
 
-<!-- signUpModal -->
+<!-- signUpModal -->		<!-- signUpModal -->		<!-- signUpModal -->		<!-- signUpModal -->		<!-- signUpModal -->		<!-- signUpModal -->
 <div class="modal fade" id="signUpModal" role="dialog">
 	<div class="modal-dialog">
 
@@ -155,14 +143,14 @@
 					</div>
 					<div class="form-group">
 						<div class="c1 fld password1">
-							<label class="col-sm-4 control-label" for="login_password">Password:</label>
+							<label class="col-sm-4 control-label" for="signUp_password">Password:</label>
 							<input class="col-sm-5" type="password" name="password1" id="signUp_Password" value="">
 							<label class="col-sm-3" for="space"> </label>
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="c1 fld password2">
-							<label class="col-sm-4 control-label" for="login_password">Confirm Password:</label>
+							<label class="col-sm-4 control-label" for="signUp_password2">Confirm Password:</label>
 							<input class="col-sm-5" type="password" name="password2" id="signUp_password2" value="">
 							<label class="col-sm-3" for="space"> </label>
 						</div>
@@ -188,10 +176,10 @@
 </div>
 
 
-<!-- loginModal -->
+
+<!-- loginModal -->			<!-- loginModal -->			<!-- loginModal -->			<!-- loginModal -->			<!-- loginModal -->			<!-- loginModal -->
 <div class="modal fade" id="loginModal" role="dialog" ng-controller = "logIn_Controller">
 	<div class="modal-dialog">
-
 		<!-- loginModal content-->
 		<div class="modal-content">
 			<div class="modal-header">
@@ -199,7 +187,7 @@
 				<h4 class="modal-title">Login</h4>
 			</div>
 			<div class="modal-body">
-				<form class="loginform" id="login" >
+				<form class="loginform" id="login">
 					<div class="form-group">
 						<div class="c1 fld username">
 							<label class="col-sm-4" for="login_username">User Name:</label>
@@ -224,7 +212,7 @@
 					<div class="form-group">
 						<div class="c1 btn">
 							<label class="col-sm-1" for="space"> </label>
-							<input class="col-sm-9" type="submit" ng-click ="logIn()" id="login_button" data-dismiss="modal" value="Sign-in">
+							<input class="col-sm-9" type="submit" ng-click ="logIn(); show_user_management_li()" id="login_button" data-dismiss="modal" value="Sign-in">
 							<label class="col-sm-2" for="space"> </label>
 						</div>
 					</div>
@@ -240,7 +228,7 @@
 
 
 
-<!-- navbar -->
+<!-- navbar -->			<!-- navbar -->			<!-- navbar -->				<!-- navbar -->			<!-- navbar -->		<!-- navbar -->
 <nav class="navbar navbar-inverse navbar-fixed-top">
 	<div class="container-fluid">
 		<div class="navbar-header">
@@ -254,12 +242,12 @@
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav">
-				<li class="active"><a data-toggle="tab" href="#home">Home</a></li>
+				<li class="active"><a data-toggle="tab" href="#about">About</a></li>
 				<li><a data-toggle="tab" href="#branches">Branches</a></li>
 				<li><a data-toggle="tab" href="#catalog">Catalog</a></li>
-				<li><a data-toggle="tab" href="#about">About</a></li>
+				<!--li><a data-toggle="tab" href="#about">Home</a></li-->
 				<li><a data-toggle="tab" href="#contact">Contact</a></li>
-				<li><a data-toggle="tab" href="#user_Management">User Management</a></li>
+				<li ng-show='user_management_li'><a data-toggle="tab" href="#user_Management" >User Management</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li><a id="Sign-Up-button" href="#" data-toggle="modal" data-target="#signUpModal" ><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
@@ -272,12 +260,17 @@
 </nav>
 
 
+
+
+<!-- main -->			<!-- main -->			<!-- main -->				<!-- main -->			<!-- main -->		<!-- main -->
 <div id="main">
 	<div ng-view></div>
 </div>
 
 
-<!-- footer -->
+
+
+<!-- footer -->			<!-- footer -->			<!-- footer -->				<!-- footer -->			<!-- footer -->		<!-- footer -->
 <footer class="container-fluid text-center">
 	<p>S&Y Flower Store Copyright</p>
 	<form class="form-inline">Get deals:
@@ -289,8 +282,15 @@
 </footer>
 
 
+
+
+
+
+
+
 <!-- sign up validation -->
-<script type="text/javascript">
+
+<!--script-- type="text/javascript">
 	function checkForm(form) {
 		if(form.username.value == "") {
 			alert("Error: Username cannot be blank!");
@@ -342,6 +342,59 @@
 		alert("You entered a valid password: " + form.password1.value);
 		return true;
 	}
-</script>
+</script-->
+
+<!-- logIn validation -->
+
+<!--script-- type="text/javascript">
+	function checkForm2(form) {
+		if (form.username.value == "") {
+			alert("Error: Username cannot be blank!");
+			form.username.focus();
+			return false;
+		}
+		re = /^\w+$/;
+		if (!re.test(form.username.value)) {
+			alert("Error: Username must contain only letters, numbers and underscores!");
+			form.username.focus();
+			return false;
+		}
+		re = /[0-9]/;
+		if (!re.test(form.password.value)) {
+			alert("Error: password must contain at least one number (0-9)!");
+			form.password.focus();
+			return false;
+		}
+		re = /[a-z]/;
+		if (!re.test(form.password.value)) {
+			alert("Error: password must contain at least one lowercase letter (a-z)!");
+			form.password.focus();
+			return false;
+		}
+		re = /[A-Z]/;
+		if (!re.test(form.password.value)) {
+			alert("Error: password must contain at least one uppercase letter (A-Z)!");
+			form.password.focus();
+			return false;
+		}
+		alert("You entered a valid password: " + form.password.value);
+		return true;
+	}
+</script-->
+
+
+
+<!--script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-53164856-2', 'auto');
+    ga('send', 'pageview');
+
+</script-->
+
+
 </body>
 </html>

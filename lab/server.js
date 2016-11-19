@@ -21,6 +21,59 @@ app.get('/', function(req, res) {
     res.render('pages/main');
 });
 
+//app.get('/ejs', function(req, res) {
+//    var pathname = url.parse(req.url).pathname;
+//    console.log("Request for " + pathname + " received.");
+//    res.render('pages/index');
+//});
+
+app.get('/branches', function(req, res) {
+    var pathname = url.parse(req.url).pathname;
+    console.log("Request for " + pathname + " received.");
+    res.send(JSON.stringify(branchlist));
+});
+
+app.get('/flowerslist', function(req, res) {
+    var pathname = url.parse(req.url).pathname;
+    console.log("Request for " + pathname + " received.");
+    res.send(JSON.stringify(flowerslist));
+});
+
+app.get('/userslist', function(req, res) {
+    var pathname = url.parse(req.url).pathname;
+    console.log("Request for " + pathname + " received.");
+    res.send(JSON.stringify(userslist));
+});
+
+app.post('/Login', function(req, res) {
+    var pathname = url.parse(req.url).pathname;
+    console.log("Request for " + pathname + " received.");
+
+    // console.log("req.body " + req.body + " !!!!!.");
+    // console.log("req.body.user " + req.body.user);
+    // console.log("req.body.password " +req.body.password);
+
+
+    for(var i = 0; i < userslist.length; i++){
+        if((userslist[i].user === req.body.user) && (userslist[i].password === req.body.password)){
+            res.send(JSON.stringify(userslist[i]));
+            break;
+        }
+    }
+    res.send('user or password is incorrect');
+});
+
+var server = app.listen(5557, function () {
+
+    var host = server.address().address
+    var port = server.address().port
+
+    console.log("app listening on http://%s:%s", host, port)
+
+})
+
+
+
 
 
 var branchlist=[];
@@ -117,16 +170,11 @@ flowerslist.push({
     id:'6'
 });
 
+
+
+
 var userslist = [];
-userslist.push( {
-    firstName:'Shmulik ',
-    lastName:'K',
-    id:'301301301',
-    user:'SK',
-    password:'1234',
-    accountType:'manager',
-    branchesNum:'NULL'
-});
+
 userslist.push({
     firstName:'David ',
     lastName:'Levy',
@@ -135,6 +183,15 @@ userslist.push({
     password:'1234',
     accountType:'employee',
     branchesNum:'01'
+});
+userslist.push( {
+    firstName:'Shmulik ',
+    lastName:'K',
+    id:'301301301',
+    user:'SK',
+    password:'1234',
+    accountType:'manager',
+    branchesNum:'NULL'
 });
 userslist.push({
     firstName:'David ',
@@ -163,56 +220,3 @@ userslist.push( {
     accountType:'manager',
     branchesNum:'NULL'
 });
-
-
-
-app.get('/ejs', function(req, res) {
-    var pathname = url.parse(req.url).pathname;
-    console.log("Request for " + pathname + " received.");
-    res.render('pages/index');
-});
-
-app.get('/branches', function(req, res) {
-    var pathname = url.parse(req.url).pathname;
-    console.log("Request for " + pathname + " received.");
-    res.send(JSON.stringify(branchlist));
-});
-
-app.get('/flowerslist', function(req, res) {
-    var pathname = url.parse(req.url).pathname;
-    console.log("Request for " + pathname + " received.");
-    res.send(JSON.stringify(flowerslist));
-});
-
-app.get('/userslist', function(req, res) {
-    var pathname = url.parse(req.url).pathname;
-    console.log("Request for " + pathname + " received.");
-    res.send(JSON.stringify(userslist));
-});
-
-app.post('/Login', function(req, res) {
-    var pathname = url.parse(req.url).pathname;
-    console.log("Request for " + pathname + " received.");
-
-   // console.log("req.body " + req.body + " !!!!!.");
-   // console.log("req.body.user " + req.body.user);
-   // console.log("req.body.password " +req.body.password);
-
-
-    for(var i = 0; i < userslist.length; i++){
-        if((userslist[i].user === req.body.user) &&
-            (userslist[i].password === req.body.password)){
-            res.send(JSON.stringify(userslist[i]));
-            break;
-        }
-    }
-});
-
-var server = app.listen(5557, function () {
-
-    var host = server.address().address
-    var port = server.address().port
-
-    console.log("app listening on http://%s:%s", host, port)
-
-})
