@@ -52,15 +52,19 @@ app.post('/Login', function(req, res) {
     // console.log("req.body " + req.body + " !!!!!.");
     // console.log("req.body.user " + req.body.user);
     // console.log("req.body.password " +req.body.password);
-
+    var sent = false;
 
     for(var i = 0; i < userslist.length; i++){
         if((userslist[i].user === req.body.user) && (userslist[i].password === req.body.password)){
             res.send(JSON.stringify(userslist[i]));
+            sent = true;
             break;
         }
     }
-    res.send('user or password is incorrect');
+    if (!sent){
+        res.send('user or password is incorrect');
+    }
+
 });
 
 var server = app.listen(5557, function () {

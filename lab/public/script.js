@@ -23,9 +23,82 @@
 	}
 
 
+scotchApp.run(function ($rootScope) {
+    $rootScope.$on('scope.stored', function (event, data) {
+        console.log("scope.stored", data);
+        alert ("scope.stored : " + data);
+    });
+});
+
+scotchApp.factory('Scopes', function ($rootScope) {
+    var mem = {};
+
+    return {
+        store: function (key, value) {
+            $rootScope.$emit('scope.stored', key);
+            mem[key] = value;
+        },
+        get: function (key) {
+            return mem[key];
+        }
+    };
+});
 
 
-scotchApp.controller('logIn_Controller', function($scope){
+scotchApp.controller('logIn_Controller', function ($scope, Scopes){
+    Scopes.store('logIn_Controller', $scope);
+
+    alert('enter to logIn_Controller');
+
+    $scope.logIn = function(){
+        alert('enter to logIn function');
+
+        currentUser.user = document.getElementById("login_username").value;
+        currentUser.password = document.getElementById("login_password").value;
+        //alert("this is document.getElementById('login_username'): " + document.getElementById("login_username"));
+        //alert("this is document.getElementById('login_password'): " + document.getElementById("login_password"));
+        //alert("this is currentUser.user: " + currentUser.user);
+        //alert("this is currentUser.password: " + currentUser.password);
+        //console.log("currentUser.user" + currentUser.user);
+        //console.log("currentUser.password" + currentUser.password);
+        $.ajax({ url:"http://localhost:5557/Login",
+            type: "POST",
+            data:{
+                user: currentUser.user,
+                password: currentUser.password
+            },
+            success: function(data ,$scope) {
+                //alert("success + data: " + data);
+                if ('user or password is incorrect' === data) {
+                    alert('user or password is incorrect');
+                    isManager = false;
+                    isWorker  = false;
+                }
+                else if(-1 !== data.indexOf("manager")){
+                    window.isManager = true;
+                    isWorker = false;
+                    alert("success + isManager: " + isManager);
+                }
+                else if(-1 !== data.indexOf("employee")){
+                    window.isWorker = true;
+                    isManager = false;
+                    //alert("success + isWorker: " + isWorker);
+                }
+                //var type = data[0].accountType;
+                //if (type === "manager") {
+                //    isManager = true;
+                //}
+                //if (type === "employee") {
+                //
+                //    isWorker = true;
+                //}
+                Scopes.get('navBar_Controller').show_user_management_li();
+            },
+            error: function(e){
+            }
+        })
+    }
+
     $scope.logOut = function(){
         $scope.user = "";
         $scope.password = "";
@@ -33,53 +106,10 @@ scotchApp.controller('logIn_Controller', function($scope){
         isWorker = false;
         alert("נותקת בהצלחה");
     }
-    $scope.logIn = function(){
-            currentUser.user = document.getElementById("login_username").value;
-            currentUser.password = document.getElementById("login_password").value;
-            //alert("this is document.getElementById('login_username'): " + document.getElementById("login_username"));
-            //alert("this is document.getElementById('login_password'): " + document.getElementById("login_password"));
-            //alert("this is currentUser.user: " + currentUser.user);
-            //alert("this is currentUser.password: " + currentUser.password);
-            //console.log("currentUser.user" + currentUser.user);
-            //console.log("currentUser.password" + currentUser.password);
-            $.ajax({ url:"http://localhost:5557/Login",
-                type: "POST",
-                data:{
-                    user: currentUser.user,
-                    password: currentUser.password
-                },
-                success: function(data) {
-                    //alert("success + data: " + data);
-                    if ('user or password is incorrect' === data) {
-                        alert('user or password is incorrect');
-                        isManager = false;
-                        isWorker  = false;
-                    }
-                    else if(-1 !== data.indexOf("manager")){
-                        isManager = true;
-                        isWorker = false;
-                        //alert("success + isManager: " + isManager);
-                    }
-                    else if(-1 !== data.indexOf("employee")){
-                        isWorker = true;
-                        isManager = false;
-                        //alert("success + isWorker: " + isWorker);
-                    }
-                    //var type = data[0].accountType;
-                    //if (type === "manager") {
-                    //    isManager = true;
-                    //}
-                    //if (type === "employee") {
-//
-                    //    isWorker = true;
-                    //}
-                },
-                error: function(e){
 
-                }
-            })
-        }
-    });
+
+
+});
 	
     // configure our routes
     scotchApp.config(function($routeProvider) {
@@ -127,11 +157,31 @@ scotchApp.controller('logIn_Controller', function($scope){
 
     // create the controller and inject Angular's $scope
     scotchApp.controller('main_Controller', function($scope) {
+
+    });
+
+    // create the controller and inject Angular's $scope
+    scotchApp.controller('navBar_Controller', function ($scope, Scopes) {
+        Scopes.store('navBar_Controller', $scope);
+
+        alert('enter to navBar_Controller');
         $scope.user_management_li = false;
+
+
         $scope.show_user_management_li = function () {
-            $scope.user_management_li = true;
+            alert('enter to show_user_management_li function');
+            var show_management = (isWorker == true || isManager == true);
+            if (show_management){
+                $scope.user_management_li = true;
+                alert('user_management_li ' +  $scope.user_management_li);
+            }
+            else{
+                $scope.user_management_li = false;
+                alert('user_management_li ' +  $scope.user_management_li);
+           }
         }
     });
+
 
 
     scotchApp.controller('aboutController', function($scope) {

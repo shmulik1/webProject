@@ -212,7 +212,7 @@
 					<div class="form-group">
 						<div class="c1 btn">
 							<label class="col-sm-1" for="space"> </label>
-							<input class="col-sm-9" type="submit" ng-click ="logIn(); show_user_management_li()" id="login_button" data-dismiss="modal" value="Sign-in">
+							<input class="col-sm-9" type="submit" ng-click ="logIn()" id="login_button" data-dismiss="modal" value="Sign-in">   <!--; show_user_management_li()-->
 							<label class="col-sm-2" for="space"> </label>
 						</div>
 					</div>
@@ -240,7 +240,7 @@
 			<b class="navbar-brand"  >
 				<img id="logo_image" src="images/logo.jpg" alt="S&Y Book Store"/>S&Y Flower Store</b>
 		</div>
-		<div class="collapse navbar-collapse" id="myNavbar">
+		<div class="collapse navbar-collapse" id="myNavbar" ng-controller = "navBar_Controller">
 			<ul class="nav navbar-nav">
 				<li class="active"><a data-toggle="tab" href="#about">About</a></li>
 				<li><a data-toggle="tab" href="#branches">Branches</a></li>
