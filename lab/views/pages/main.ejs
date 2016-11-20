@@ -202,17 +202,10 @@
 							<label class="col-sm-3" for="space"> </label>
 						</div>
 					</div>
-					<!--div class="form-group">
-                        <div class="c1 rememberusername">
-                            <input class="col-sm-4" type="checkbox" name="rememberusername" id="rememberusername" value="1">
-                            <label class="col-sm-8" for="rememberusername">Remember User Name </label>
-                            <label class="col-sm-0" for="space"> </label>
-                        </div>
-                    </div-->
 					<div class="form-group">
 						<div class="c1 btn">
 							<label class="col-sm-1" for="space"> </label>
-							<input class="col-sm-9" type="submit" ng-click ="logIn()" id="login_button" data-dismiss="modal" value="Sign-in">   <!--; show_user_management_li()-->
+							<input class="col-sm-9" type="submit" id="login_button" data-dismiss="modal" value="Sign-in">   <!--; ng-click ="logIn()" -->
 							<label class="col-sm-2" for="space"> </label>
 						</div>
 					</div>
@@ -226,6 +219,37 @@
 	</div>
 </div>
 
+
+
+<!-- logoutModal -->			<!-- logoutModal -->			<!-- logoutModal -->			<!-- logoutModal -->			<!-- logoutModal -->			<!-- logoutModal -->
+<div class="modal fade" id="logoutModal" role="dialog" >
+	<div class="modal-dialog">
+		<!-- loginModal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Logout</h4>
+			</div>
+			<div class="modal-body">
+				<div class="logoutcontainer" id="logout">
+					<div class="container">
+						<div class="question">
+							<h2 class="col-sm-12">Are you sure you want to Logout?</h2>
+						</div>
+					</div>
+					<div class="container">
+							<button class="btn btn-danger btn-lg" type="submit" onclick="logout()" id="logout_button" data-dismiss="modal" style="position: absolute; right: 30px;">Yes</button>
+							<button type="button" class="btn btn-success btn-lg" data-dismiss="modal" style="float: left;">No </button>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+
+	</div>
+</div>
 
 
 <!-- navbar -->			<!-- navbar -->			<!-- navbar -->				<!-- navbar -->			<!-- navbar -->		<!-- navbar -->
@@ -247,11 +271,25 @@
 				<li><a data-toggle="tab" href="#catalog">Catalog</a></li>
 				<!--li><a data-toggle="tab" href="#about">Home</a></li-->
 				<li><a data-toggle="tab" href="#contact">Contact</a></li>
-				<li id='user_management_li' style="display: none"><a data-toggle="tab" href="#user_Management" >User Management</a></li><!--ng-show='user_management_li'-->
+				<%if (user !== 'Guest'){%>
+				<li id='user_management_li'><a data-toggle="tab" href="#user_Management" >User Management</a></li>
+				<%}%>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
+				<li class="active"><a id="welcomeLine" href="#" ><span></span> Welcome! <strong>
+							<%if (user === 'Guest') { %>
+							Guest
+							<% } else{ %>
+							<%= user %>
+							<% } %>
+						</strong></a>
+				</li>
 				<li><a id="Sign-Up-button" href="#" data-toggle="modal" data-target="#signUpModal" ><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+				<%if (user == 'Guest'){%>
 				<li><a id="login-button" href="#" data-toggle="modal" data-target="#loginModal" ><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+				<%} else {%>
+				<li><a id="logout-button" href="#" data-toggle="modal" data-target="#logoutModal" ><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+				<%}%>
 				<li><a id="cart-button" href="#"><span class="glyphicon glyphicon-shopping-cart"></span> Cart</a></li>
 
 			</ul>
@@ -283,7 +321,24 @@
 
 
 
+<script>
+	function logout() {
+		document.cookie = 'userID=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+		window.location='/';
+	}
+</script>
 
+<script>
+	$(document).ready(function () {
+		$("#login_button").click(function () {
+			var username = $("#login_username").val();
+			var password = $("#login_password").val();
+			$.get("/login", {user:username, password:password}, function (data) {
+				window.location="/";
+			});
+		});
+	});
+</script>
 
 
 

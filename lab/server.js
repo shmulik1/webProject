@@ -6,6 +6,7 @@ var url = require("url");
 var express = require('express');
 var bodyParser = require('body-parser')
 var path = require('path');
+var cookieParser = require('cookie-parser');
 
 var app = express();
 app.set('view engine', 'ejs');
@@ -14,18 +15,29 @@ app.use( bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
     extended: true
 }));
+app.use(cookieParser());
+
 
 app.get('/', function(req, res) {
     var pathname = url.parse(req.url).pathname;
     console.log("Request for " + pathname + " received.");
-    res.render('pages/main');
+    userID = req.cookies['userID'];
+    var found = -1;
+
+    for(var i = 0; i < userslist.length; i++){
+        if(userslist[i].id === userID){
+            found = i;
+            break;
+        }
+    }
+    if(found == -1){
+        res.render('pages/main',{user: 'Guest'});
+    }
+    else{
+        res.render('pages/main',{user: userslist[found].user});
+    }
 });
 
-//app.get('/ejs', function(req, res) {
-//    var pathname = url.parse(req.url).pathname;
-//    console.log("Request for " + pathname + " received.");
-//    res.render('pages/index');
-//});
 
 app.get('/branches', function(req, res) {
     var pathname = url.parse(req.url).pathname;
@@ -45,26 +57,36 @@ app.get('/userslist', function(req, res) {
     res.send(JSON.stringify(userslist));
 });
 
-app.post('/Login', function(req, res) {
+app.get('/Login', function(req, res) {
     var pathname = url.parse(req.url).pathname;
     console.log("Request for " + pathname + " received.");
 
-    // console.log("req.body " + req.body + " !!!!!.");
-    // console.log("req.body.user " + req.body.user);
-    // console.log("req.body.password " +req.body.password);
-    var sent = false;
+    var found = -1;
 
     for(var i = 0; i < userslist.length; i++){
-        if((userslist[i].user === req.body.user) && (userslist[i].password === req.body.password)){
-            res.send(JSON.stringify(userslist[i]));
-            sent = true;
+        if((userslist[i].user === req.query.user) && (userslist[i].password === req.query.password)){
+            found = i;
             break;
         }
     }
-    if (!sent){
-        res.send('user or password is incorrect');
+    if(found !== -1){
+        res.cookie('userID', userslist[found].id);
+        res.redirect("/");
     }
 
+//    var sent = false;
+//
+//    for(var i = 0; i < userslist.length; i++){
+//        if((userslist[i].user === req.body.user) && (userslist[i].password === req.body.password)){
+//            res.send(JSON.stringify(userslist[i]));
+//            sent = true;
+//            break;
+//        }
+//    }
+//    if (!sent){
+//        res.send('user or password is incorrect');
+//    }
+//
 });
 
 var server = app.listen(5557, function () {
@@ -200,7 +222,7 @@ userslist.push( {
 userslist.push({
     firstName:'David ',
     lastName:'Levy',
-    id:'30303030',
+    id:'40303030',
     user:'david',
     password:'1234',
     accountType:'supplier',
@@ -209,7 +231,7 @@ userslist.push({
 userslist.push({
     firstName:'Itzick ',
     lastName:'berko',
-    id:'30303030',
+    id:'50303030',
     user:'itzick',
     password:'1234',
     accountType:'customer',
@@ -218,7 +240,7 @@ userslist.push({
 userslist.push( {
     firstName:'Dan ',
     lastName:'Lin',
-    id:'30303030',
+    id:'60303030',
     user:'dan',
     password:'1234',
     accountType:'manager',

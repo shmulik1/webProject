@@ -9,8 +9,10 @@
 		user:"",
 		password:""
 	};
+
 	window.isManager = false;
     window.isWorker  = false;
+    window.isLogedIn  = false;
 
 	var addUser = function(){
 		var newUser = {
@@ -23,93 +25,75 @@
 	}
 
 
-//scotchApp.run(function ($rootScope) {
-//    $rootScope.$on('scope.stored', function (event, data) {
-//        console.log("scope.stored", data);
-//        alert ("scope.stored : " + data);
-//    });
-//});
-//
-//scotchApp.factory('Scopes', function ($rootScope) {
-//    var mem = {};
-//
-//    return {
-//        store: function (key, value) {
-//            $rootScope.$emit('scope.stored', key);
-//            mem[key] = value;
-//        },
-//        get: function (key) {
-//            return mem[key];
-//        }
-//    };
-//});
-
-
 scotchApp.controller('logIn_Controller', function ($scope){
 
 
     //alert('enter to logIn_Controller');
 
-    $scope.logIn = function(){
-        //alert('enter to logIn function');
-
-        currentUser.user = document.getElementById("login_username").value;
-        currentUser.password = document.getElementById("login_password").value;
-        //alert("this is document.getElementById('login_username'): " + document.getElementById("login_username"));
-        //alert("this is document.getElementById('login_password'): " + document.getElementById("login_password"));
-        //alert("this is currentUser.user: " + currentUser.user);
-        //alert("this is currentUser.password: " + currentUser.password);
-        //console.log("currentUser.user" + currentUser.user);
-        //console.log("currentUser.password" + currentUser.password);
-        $.ajax({ url:"http://localhost:5557/Login",
-            type: "POST",
-            data:{
-                user: currentUser.user,
-                password: currentUser.password
-            },
-            success: function(data ,$scope) {
-                //alert("success + data: " + data);
-                if ('user or password is incorrect' === data) {
-                    alert('user or password is incorrect');
-                    isManager = false;
-                    isWorker  = false;
-                    document.getElementById('user_management_li').style.display = "none";
-                }
-                else if(-1 !== data.indexOf("manager")){
-                    window.isManager = true;
-                    isWorker = false;
-                    //alert("success + isManager: " + isManager);
-                    document.getElementById('user_management_li').style.display = "block";
-                }
-                else if(-1 !== data.indexOf("employee")){
-                    window.isWorker = true;
-                    isManager = false;
-                    //alert("success + isWorker: " + isWorker);
-                    document.getElementById('user_management_li').style.display = "block";
-                }
-                //var type = data[0].accountType;
-                //if (type === "manager") {
-                //    isManager = true;
-                //}
-                //if (type === "employee") {
-                //
-                //    isWorker = true;
-                //}
-                Scopes.get('navBar_Controller').show_user_management_li();
-            },
-            error: function(e){
-            }
-        })
-    }
-
-    $scope.logOut = function(){
-        $scope.user = "";
-        $scope.password = "";
-        isManager = false;
-        isWorker = false;
-        alert("נותקת בהצלחה");
-        document.getElementById('user_management_li').style.display = "none";
-    }
+////////    $scope.logIn = function(){
+////////        //alert('enter to logIn function');
+////////
+////////        currentUser.user = document.getElementById("login_username").value;
+////////        currentUser.password = document.getElementById("login_password").value;
+////////        //alert("this is document.getElementById('login_username'): " + document.getElementById("login_username"));
+////////        //alert("this is document.getElementById('login_password'): " + document.getElementById("login_password"));
+////////        //alert("this is currentUser.user: " + currentUser.user);
+////////        //alert("this is currentUser.password: " + currentUser.password);
+////////        //console.log("currentUser.user" + currentUser.user);
+////////        //console.log("currentUser.password" + currentUser.password);
+////////        $.ajax({ url:"http://localhost:5557/Login",
+////////            type: "POST",
+////////            data:{
+////////                user: currentUser.user,
+////////                password: currentUser.password
+////////            },
+////////            success: function(data ,$scope) {
+////////                //alert("success + data: " + data);
+////////                isLogedIn  = true;
+////////                if ('user or password is incorrect' === data) {
+////////                    alert('user or password is incorrect');
+////////                    isManager = false;
+////////                    isWorker  = false;
+////////                    isLogedIn  = false;
+////////                    document.getElementById('user_management_li').style.display = "none";
+////////                }
+////////                else if(-1 !== data.indexOf("manager")){
+////////                    window.isManager = true;
+////////                    isWorker = false;
+////////                    //alert("success + isManager: " + isManager);
+////////                    document.getElementById('user_management_li').style.display = "block";
+////////                    user = data.indexOf('user');
+////////                }
+////////                else if(-1 !== data.indexOf("employee")){
+////////                    window.isWorker = true;
+////////                    isManager = false;
+////////                    user = data.indexOf('user');
+////////                    //alert("success + isWorker: " + isWorker);
+////////                    document.getElementById('user_management_li').style.display = "block";
+////////                }
+////////                //var type = data[0].accountType;
+////////                //if (type === "manager") {
+////////                //    isManager = true;
+////////                //}
+////////                //if (type === "employee") {
+////////                //
+////////                //    isWorker = true;
+////////                //}
+////////                //Scopes.get('navBar_Controller').show_user_management_li();
+////////            },
+////////            error: function(e){
+////////            }
+////////        })
+////////    }
+////////
+////////    $scope.logOut = function(){
+////////        $scope.user = "";
+////////        $scope.password = "";
+////////        isManager = false;
+////////        isWorker = false;
+////////        alert("נותקת בהצלחה");
+////////        document.getElementById('user_management_li').style.display = "none";
+////////    }
 
 
 
@@ -119,10 +103,10 @@ scotchApp.controller('logIn_Controller', function ($scope){
     scotchApp.config(function($routeProvider) {
         $routeProvider
             // route to home page
-			//.when('/home', {
-            //    templateUrl : 'pages/home.html',
-            //    controller  : 'homeController'
-            //})
+			.when('/', {
+                templateUrl : 'pages/about.html',
+                controller  : 'aboutController'
+            })
 			
 			// route to catalog page
             .when('/catalog', {
@@ -135,21 +119,19 @@ scotchApp.controller('logIn_Controller', function ($scope){
                 templateUrl : 'pages/user_Management.html',
                 controller  : 'user_ManagementController'
             })
-			// route to login page
-			// .when('/login', {
-            //    templateUrl : 'pages/login.html',
-            //   controller  : 'loginController'
-            //})
+
 			// route to about page
 			.when('/about', {
                 templateUrl : 'pages/about.html',
                 controller  : 'aboutController'
             })
+
             // route to contact page
 			.when('/contact', {
                 templateUrl : 'pages/contact.html',
                 controller  : 'contactController'
             })
+
             // route to branches page
             .when('/branches', {
                 templateUrl : 'pages/branches.html',
@@ -211,22 +193,26 @@ scotchApp.controller('logIn_Controller', function ($scope){
 
 	var userslist = [];
     scotchApp.controller('user_ManagementController',function($scope,$http) {
-		if(isManager){
-            alert("Hello Manager - Access Granted");
-			$http.get("http://localhost:5557/userslist").success(function(data){
-			$scope.userslist = data;
-		});
-		}
-        else if(isWorker){
-            alert("Hello Worker - Access Granted");
-            $http.get("http://localhost:5557/userslist").success(function(data){
-                $scope.userslist = data;
-            });
-        }
-        else{
-            alert("Hello - Access Denied");
-        }
-    });
+        $http.get("http://localhost:5557/userslist").success(function(data){
+                    $scope.userslist = data;
+                });
+
+		//if(isManager){
+        //    alert("Hello Manager - Access Granted");
+		//	$http.get("http://localhost:5557/userslist").success(function(data){
+		//	$scope.userslist = data;
+		//});
+		//}
+        //else if(isWorker){
+        //    alert("Hello Worker - Access Granted");
+        //    $http.get("http://localhost:5557/userslist").success(function(data){
+        //        $scope.userslist = data;
+        //    });
+        //}
+        //else{
+        //    alert("Hello - Access Denied");
+        //}
+    });//
 
 	
 	//**************************************************************************
