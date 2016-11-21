@@ -238,8 +238,8 @@
 						</div>
 					</div>
 					<div class="container">
-							<button class="btn btn-danger btn-lg" type="submit" onclick="logout()" id="logout_button" data-dismiss="modal" style="position: absolute; right: 30px;">Yes</button>
-							<button type="button" class="btn btn-success btn-lg" data-dismiss="modal" style="float: left;">No </button>
+						<button class="btn btn-danger btn-lg" type="submit" onclick="logout()" id="logout_button" data-dismiss="modal" style="position: absolute; right: 30px;">Yes</button>
+						<button type="button" class="btn btn-success btn-lg" data-dismiss="modal" style="float: left;">No </button>
 					</div>
 				</div>
 			</div>
@@ -250,6 +250,8 @@
 
 	</div>
 </div>
+
+
 
 
 <!-- navbar -->			<!-- navbar -->			<!-- navbar -->				<!-- navbar -->			<!-- navbar -->		<!-- navbar -->
@@ -306,20 +308,49 @@
 </div>
 
 
+<!-- spamModal -->			<!-- spamModal -->			<!-- spamModal -->			<!-- spamModal -->			<!-- spamModal -->			<!-- spamModal -->
+<div class="modal fade" id="spamModal" role="dialog" >
+	<div class="modal-dialog">
+		<!-- loginModal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Spam <span class="glyphicon glyphicon-hand-right"></span></h4>
+			</div>
+			<div class="modal-body">
+				<div class="spamcontainer" id="spam">
+					<div class="container">
+							<h2 class="col-sm-12">You did a serious mistake!</h2>
+							<h2 class="col-sm-12">Now we will send you full of spam :)</h2>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
 
+	</div>
+</div>
 
 <!-- footer -->			<!-- footer -->			<!-- footer -->				<!-- footer -->			<!-- footer -->		<!-- footer -->
 <footer class="container-fluid text-center">
 	<p>S&Y Flower Store Copyright</p>
 	<form class="form-inline">Get deals:
 		<input type="email" class="form-control" size="50" placeholder="Email Address">
-		<button type="button" class="btn btn-danger">Sign Up</button>
+		<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#spamModal">Sign Up</button>
 	</form>
 	<br />
 	<p> This page Copyright &copy; 1987 by S&Y</p>
 </footer>
 
 
+
+<script>
+	function spam() {
+		alert("You did a serious mistake!\nNow we will send you full of spam :)");
+	}
+</script>
 
 <script>
 	function logout() {
