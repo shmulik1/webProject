@@ -3,6 +3,7 @@ var Schema = mongo.Schema;
 
 var flowerSchema = new Schema({
     name: String,
+    description: String,
     color: String,
     image_link: String,
     price: Number,
