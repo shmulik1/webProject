@@ -9,11 +9,16 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var mongo = require("mongoose");
 
-var db = mongo.connect('mongodb://localhost:27017/myfirstdatabase');
-//var db = mongo.createConnection('mongodb://localhost:27017/myfirstdatabase');
-//db.once('open', function() { console.log("Connected to DB") });
-//db.on('error', function() {  console.log("Error connecting to DB") });
 console.log('Pending DB connection');
+var db = mongo.connect('mongodb://localhost:27017/myfirstdatabase', function(err) {
+    if(!err) {
+        console.log("Connected to DB")
+    }
+    else {
+        console.log("Could not connect to database, error returned: " + err);
+    }
+});
+
 
 var Schema = mongo.Schema;
 var Branch = require('./DAL/branchSchema');
@@ -28,13 +33,13 @@ var app = express();
 Branch.find({}, function (err, branches) {
     if (err) throw err;
     if (branches.length == 0){
-        AddBranch('S&Y Rishon-Leziyon', 1, 'Sigalit 1 Rishon Leziyon', '08:00-19:00');
-        AddBranch('S&Y Jerusalem', 2, 'Nurit 2 Jerusalem', '08:00-19:00');
-        AddBranch('S&Y Tel-Aviv', 3, 'Narkis 3 TLV', '08:00-19:00');
-        AddBranch('S&Y Naria', 4, 'Havazelet 4 Naarya', '08:00-19:00');
-        AddBranch('S&Y Petah-Tikva', 5, 'Yakinton 5 Petah Tikva', '08:00-19:00');
-        AddBranch('S&Y Eilat', 6, 'Vered 6 Eilat', '08:00-19:00');
-        AddBranch('S&Y Ashdod', 7, 'Rakefet 7 Ashdod', '08:00-19:00');
+        AddBranch('S&Y Rishon-Leziyon', 1, 'Sigalit 1 Rishon Leziyon', 'dan', '08:00-19:00', '03-5701234');
+        AddBranch('S&Y Jerusalem', 2, 'Nurit 2 Jerusalem', 'south', '08:00-19:00', '02-6418187');
+        AddBranch('S&Y Tel-Aviv', 3, 'Narkis 3 TLV', 'dan', '08:00-19:00', '03-6771234');
+        AddBranch('S&Y Naria', 4, 'Havazelet 4 Naarya', 'north', '08:00-19:00', '04-5781234');
+        AddBranch('S&Y Petah-Tikva', 5, 'Yakinton 5 Petah Tikva', 'dan', '08:00-19:00', '03-6191234');
+        AddBranch('S&Y Eilat', 6, 'Vered 6 Eilat', 'south', '08:00-19:00', '08-6128877');
+        AddBranch('S&Y Ashdod', 7, 'Rakefet 7 Ashdod', 'dan', '08:00-19:00', '09-9326543');
     }
 });
 
@@ -101,27 +106,37 @@ app.get('/', function(req, res) {
 app.get('/branches', function(req, res) {
     var pathname = url.parse(req.url).pathname;
     console.log("Request for " + pathname + " received.");
-    res.send(JSON.stringify(branchlist));
+
+    Branch.find({isActive: true}, function(err, branchlist) {
+        if (err) throw err;
+        // object of all the branches
+        res.json(branchlist);
+    });
+    //res.send(JSON.stringify(branchlist));
 });
+
+
 
 app.get('/flowerslist', function(req, res) {
     var pathname = url.parse(req.url).pathname;
     console.log("Request for " + pathname + " received.");
 
-    //Flower.find({isActive: true}, function(err, flowers) {
-    //    if (err) throw err;
-    //    // object of all the branches
-    //    res.json(flowers);
-    //});
-
-    res.send(JSON.stringify(flowerslist));
+    Flower.find({isActive: true}, function(err, flowerslist) {
+        if (err) throw err;
+        // object of all the flowers
+        res.json(flowerslist);
+    });
 });
+
+
 
 app.get('/userslist', function(req, res) {
     var pathname = url.parse(req.url).pathname;
     console.log("Request for " + pathname + " received.");
     res.send(JSON.stringify(userslist));
 });
+
+
 
 app.get('/Login', function(req, res) {
     var pathname = url.parse(req.url).pathname;
@@ -139,34 +154,19 @@ app.get('/Login', function(req, res) {
         res.cookie('userID', userslist[found].id);
         res.redirect("/");
     }
-
-//    var sent = false;
-//
-//    for(var i = 0; i < userslist.length; i++){
-//        if((userslist[i].user === req.body.user) && (userslist[i].password === req.body.password)){
-//            res.send(JSON.stringify(userslist[i]));
-//            sent = true;
-//            break;
-//        }
-//    }
-//    if (!sent){
-//        res.send('user or password is incorrect');
-//    }
-//
 });
 
-var server = app.listen(5557, function () {
 
+
+var server = app.listen(5557, function () {
     var host = server.address().address
     var port = server.address().port
-
     console.log("app listening on http://%s:%s", host, port)
-
 })
 
 
 
-
+/*
 
 var branchlist=[];
 
@@ -262,7 +262,7 @@ flowerslist.push({
     id:'6'
 });
 
-
+*/
 
 
 var userslist = [];
@@ -314,13 +314,15 @@ userslist.push( {
 });
 
 
-function AddBranch(pname, pnumber, plocation, popeningHours) {
+function AddBranch(pname, pnumber, paddress, pstate, popeningHours, pphoneNumber) {
     var branch = new Branch({
         name: pname,
         number: pnumber,
-        location: plocation,
+        address: paddress,
+        state: pstate,
         isActive: true,
-        openingHours: popeningHours
+        openingHours: popeningHours,
+        phoneNumber: pphoneNumber
     });
     branch.save(function (err) {
         if (err) throw err;
@@ -332,10 +334,12 @@ function UpdateBranch(branch_new) {
     Branch.findById(branch_new._id, function (err, branch) {
         if (err) throw err;
         branch.name = branch_new.name;
-        branch.location = branch_new.location;
+        branch.address = branch_new.address;
+        branch.state = branch_new.state;
         branch.isActive = branch_new.isActive;
         branch.openingHours = branch_new.openingHours;
         branch.number = branch_new.number;
+        branch.phoneNumber = branch_new.phoneNumber;
         branch.save(function (err) {
             if (err) throw err;
             console.log('branch updated');
@@ -385,6 +389,7 @@ function UpdateFlower(flower_new) {
         if (err) throw err;
         flower.isActive = flower_new.isActive;
         flower.name = flower_new.name;
+        flower.description = flower_new.description;
         flower.color = flower_new.color;
         flower.image_link = flower_new.image_link;
         flower.price = flower_new.price;

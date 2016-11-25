@@ -1,62 +1,59 @@
-
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="he">
-
 <body>
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=583779281637356&version=v2.0";
-    fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-<div class="siteWrapper">
-
-	<div class="main clear-top">
-		<div class="container">
-    <div class="pageTitle" style="text-align:right" dir="rtl"><h1>צור קשר</h1></div>
-    <div class="row breadCrumbs"></div>
-    <div class="row">
-        <div class="col-xs-12 bigImgCont">
-                            <img src="http://www.habsor.co.il/webfiles/fck/image/headers2/49dcba7fdf98f205edbf32242691e162_img_from_contact_us.jpg" class="img-responsive" alt="צרו קשר"/>
-                    </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12 col-md-5 col-lg-5 formContentDiv">
-                     </div>
-        <div class="col-xs-12 col-md-7 col-lg-7 formArea">
-            <h2 style="text-align:right" dir="rtl">טופס צור קשר</h2>
-            		                <form action="#" method="post" name="contactForm" style="padding: 0px; margin: 0px;" onsubmit="return checkFormContact();">
-	                	
-		                <div class="row">
-		                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 inputDiv" style="text-align:right" dir="rtl">
-                                <input  name="Phone" type="text" id="Phone" class="form-control formInput" placeholder="טלפון" required="required" />
-                            </div>
-                            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 inputDiv" style="text-align:right" dir="rtl">
-                                <input name="Email" type="text" id="Email" class="form-control formInput" placeholder="אימייל" required="required" />
-                            </div>
-							<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 inputDiv" style="text-align:right" dir="rtl">
-		                        <input name="First_Name" type="text" id="First_Name" class="form-control formInput" placeholder="שם" required="required" />
-		                    </div>
-		                    <div class="col-xs-12 commentsTextarea" style="text-align:right" dir="rtl">
-		                            <textarea name="Comments" id="Comments" class="form-control formInput" rows="9" cols="25" required="required"
-		                                placeholder="תוכן"></textarea>
-		                    </div>
-		                    <div class="col-md-12">
-		                        <button type="submit" name="submit" class="submitButton pull-right" style="text-align:right" dir="rtl">
-		                        	שלח		                        </button>
-		                        <input type="hidden" name="hidden_Submit" value="1" />
-		                    </div>
-		                </div>
-	                </form>
-                        </div>
-
-    </div>
-</div>
+	<script>
+		$(document).ready(function () {
+			$("#send_button").click(function () {
+				//checkForm();
+				//alert("Well done!\n Suppose that your application was indeed sent to us :)");
+				//var username = $("#login_username").val();
+				//var password = $("#login_password").val();
+				//$.get("/login", {user:username, password:password}, function (data) {
+				//	window.location="/";
+				//});
+			});
+		});
+	</script>
+	<div id="fb-root"></div>
+	<div class="siteWrapper">
+		<div class="main clear-top">
+			<div class="container">
+	    		<div class="pageTitle" style="text-align:right" dir="rtl">
+					<h1>צור קשר</h1>
+				</div>
+				<div class="row breadCrumbs"></div>
+	    		<div class="row">
+	        		<div class="col-xs-12 bigImgCont">
+						<img src="/images/from_contact_us.jpg" class="img-responsive" alt="צרו קשר"/>
+					</div>
+	    		</div>
+	    		<div class="row">
+	        		<div class="col-xs-12 col-md-5 col-lg-5 formContentDiv"></div>
+	        		<div class="col-xs-12 col-md-7 col-lg-7 formArea">
+	            		<h2 style="text-align:right" dir="rtl">טופס צור קשר</h2>
+						<form name="contactForm" style="padding: 0px; margin: 0px;" >
+			                <div class="row">
+			                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 inputDiv" style="text-align:right" dir="rtl">
+	                                <input  name="Phone" type="text" id="Phone" class="form-control formInput" placeholder="טלפון" required="required" />
+	                            </div>
+	                            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 inputDiv" style="text-align:right" dir="rtl">
+	                                <input name="Email" type="text" id="Email" class="form-control formInput" placeholder="אימייל" required="required" />
+	                            </div>
+								<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 inputDiv" style="text-align:right" dir="rtl">
+			                        <input name="First_Name" type="text" id="First_Name" class="form-control formInput" placeholder="שם" required="required" />
+			                    </div>
+			                    <div class="col-xs-12 commentsTextarea" style="text-align:right" dir="rtl">
+									<textarea name="Comments" id="Comments" class="form-control formInput" rows="9" cols="25" required="required" placeholder="תוכן"></textarea>
+			                    </div>
+			                    <div class="col-md-12">
+			                        <button type="submit" id="send_button" name="submit" class="submitButton pull-right" style="text-align:right" dir="rtl">
+			                        	שלח
+									</button>
+			                    </div>
+			                </div>
+		                </form>
+					</div>
+	    		</div>
+			</div>
+		</div>
 	</div>
-</div>
-
-
 </body>
-</html>
+

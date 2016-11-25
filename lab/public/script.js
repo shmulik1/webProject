@@ -111,7 +111,8 @@ scotchApp.controller('logIn_Controller', function ($scope){
 			// route to catalog page
             .when('/catalog', {
                 templateUrl : 'pages/catalog.html',
-                controller  : 'catalogController'
+                controller  : 'catalogController',
+                controllerAs : 'catalog'
             })
 
             // route to user_Management page
@@ -135,7 +136,8 @@ scotchApp.controller('logIn_Controller', function ($scope){
             // route to branches page
             .when('/branches', {
                 templateUrl : 'pages/branches.html',
-                controller  : 'branchesController'
+                controller  : 'branchesController',
+                controllerAs : 'branches'
             });
 			
 			
@@ -148,47 +150,41 @@ scotchApp.controller('logIn_Controller', function ($scope){
 
     // create the controller and inject Angular's $scope
     scotchApp.controller('navBar_Controller', function ($scope) {
-        //alert('enter to navBar_Controller');
-        //$scope.user_management_li = false;
-//
-//
-//
-        //$scope.show_user_management_li = function () {
-        //    alert('enter to show_user_management_li function');
-        //    var show_management = (isWorker == true || isManager == true);
-        //    if (show_management){
-        //        $scope.user_management_li = true;
-        //        alert('user_management_li ' +  $scope.user_management_li);
-        //    }
-        //    else{
-        //        $scope.user_management_li = false;
-        //        alert('user_management_li ' +  $scope.user_management_li);
-        //   }
-        //}
-    });
 
+    });
 
 
     scotchApp.controller('aboutController', function($scope) {
-     
+
+    });
+
+
+    scotchApp.controller('contactController', function($scope) {
+
     });
 
 
 
-	var brancheslist = [];
-	scotchApp.controller('branchesController', function($scope,$http) {
-		$http.get("http://localhost:5557/branches").success(function(data){
-			$scope.brancheslist = data;
-		});
-		
-    });
-	var flowerslist = [];
-    scotchApp.controller('catalogController', function($scope,$http) {
-		$http.get("http://localhost:5557/flowerslist").success(function(data){
-			$scope.flowerslist = data;
-		});
-	
-    });
+	scotchApp.controller('branchesController', ['$http',
+        function branchesController($http) {
+            var scope = this;
+            $http.get("http://localhost:5557/branches").then(function (response) {
+                scope.brancheslist = response.data;
+            }, function (response) {
+                alert(response.statusText + " - " + response.data);
+            });
+    }]);
+
+
+
+    scotchApp.controller('catalogController', ['$http', function flowersController($http) {
+        var scope = this;
+		$http.get("http://localhost:5557/flowerslist").then(function(response){
+			scope.flowerslist = response.data;
+		}, function (response) {
+            alert(response.statusText + " - " + response.data);
+        });
+    }]);
 
 
 	var userslist = [];
@@ -213,42 +209,3 @@ scotchApp.controller('logIn_Controller', function ($scope){
         //    alert("Hello - Access Denied");
         //}
     });//
-
-	
-	//**************************************************************************
-	/*
-
-	scotchApp.controller('loginController', function($scope, $http) {
-	 *//*
-      // create a blank object to handle form data.
-        $scope.user = {};
-		var formData = new FormData();
-      // calling our submit function.
-       $scope.submitForm = function() {
-	//var uname = $scope.user_name;
-	//var pwd = $scope.pass;
-	$.ajax({
-	 url : "/login2",
-    type: "POST",
-	data : formData,
-    success: function(data, textStatus, jqXHR)
-    {
-        //data - response from server
-    },
-    error: function (jqXHR, textStatus, errorThrown)
-    {
- 
-    }
-})		
-	
-	
-	}
-});	
-    
-$scope.myFilter = function (item) { 
-			return item === color; 
-			};
-
-
-			*/
-

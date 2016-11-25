@@ -4,9 +4,11 @@ var Schema = mongo.Schema;
 var branchSchema = new Schema({
     name: String,
     number: Number,
-    location: String,
+    address: String,
+    state: String,
     isActive: Boolean,
     openingHours: String,
+    phoneNumber: String,
     created_at: Date,
     updated_at: Date
 });

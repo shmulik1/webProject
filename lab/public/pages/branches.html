@@ -15,12 +15,12 @@
 <!-- container -->
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-4" ng-repeat="bran in brancheslist | filter: bran.state = state">
+			<div class="col-sm-6" ng-repeat="branch in branches.brancheslist | filter: branch.state = state">
 				<div class="panel panel-primary">
-					<div class="panel-heading">{{bran.name}}</div>
-					<div class="panel-body">{{bran.address}}</div>
-					<div class="panel-footer">{{bran.phone}}</div>
-					<div class="panel-footer">{{bran.state}}</div>
+					<div class="panel-heading" align="center"><strong>{{branch.name}}</strong></div>
+					<div class="panel-body" align="center"><h5><strong>Address:</strong> {{branch.address}}</h5></div>
+					<div class="panel-footer" align="center"><h5><strong>Phone Number:</strong> {{branch.phoneNumber}}</h5></div>
+					<div class="panel-footer" align="center"><h5><strong>Opening Hours:</strong> {{branch.openingHours}}</h5></div>
 				</div>
 			</div>
 		</div>
