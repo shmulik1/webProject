@@ -116,9 +116,10 @@ scotchApp.controller('logIn_Controller', function ($scope){
             })
 
             // route to user_Management page
-            $routeProvider.when('/user_Management', {
-                templateUrl : 'pages/user_Management.html',
-                controller  : 'user_ManagementController'
+            .when('/user_Management', {
+                templateUrl : 'load_user_management_by_permission',
+                controller  : 'user_ManagementController',
+                controllerAs : 'usersManagement'
             })
 
 			// route to about page
@@ -187,25 +188,57 @@ scotchApp.controller('logIn_Controller', function ($scope){
     }]);
 
 
-	var userslist = [];
-    scotchApp.controller('user_ManagementController',function($scope,$http) {
-        $http.get("http://localhost:5557/userslist").success(function(data){
-                    $scope.userslist = data;
-                });
 
-		//if(isManager){
-        //    alert("Hello Manager - Access Granted");
-		//	$http.get("http://localhost:5557/userslist").success(function(data){
-		//	$scope.userslist = data;
-		//});
-		//}
-        //else if(isWorker){
-        //    alert("Hello Worker - Access Granted");
-        //    $http.get("http://localhost:5557/userslist").success(function(data){
-        //        $scope.userslist = data;
-        //    });
-        //}
-        //else{
-        //    alert("Hello - Access Denied");
-        //}
-    });//
+    scotchApp.controller('user_ManagementController', ['$http',
+        function usersManagementController($http) {
+            var scope=this;
+            scope.addClient = function(user) {
+                if (!user || !user.name || !user.username || !user.password){
+                    alert('Fill all required fields!');
+                }
+                $http.get('/addUser?name=' + user.name + '&username=' + user.username + '&password=' + user.password +
+                    '&birthday=' + user.meta.birthday + '&website=' + user.meta.website +
+                    '&branch_number=' + user.branch_number + '&permission=0')
+                    .then(function (response) {
+                        scope.usersList = response.data;
+                    }, function (response) {
+                        alert(response.statusText + " - " + response.data);
+                    });
+            };
+            scope.addUser = function(user) {
+                if (!user || !user.name || !user.username || !user.password){
+                    alert('Fill all required fields!');
+                }
+                $http.get('/addUser?name=' + user.name + '&username=' + user.username + '&password=' + user.password +
+                    '&birthday=' + user.meta.birthday + '&website=' + user.meta.website +
+                    '&branch_number=' + user.branch_number + '&permission=' + user.permission)
+                    .then(function (response) {
+                        scope.usersList = response.data;
+                    }, function (response) {
+                        alert(response.statusText + " - " + response.data);
+                    });
+            };
+            scope.editUser = function (user) {
+                $http.get('/editUser?user_id=' + user._id + '&name=' + user.name + '&username=' + user.username + '&password=' + user.password +
+                    '&birthday=' + user.meta.birthday + '&website=' + user.meta.website +
+                    '&branch_number=' + user.branch_number + '&permission=' + user.permission)
+                    .then(function (response) {
+                        scope.usersList = response.data;
+                    }, function (response) {
+                        alert(response.statusText + " - " + response.data);
+                    });
+            };
+            scope.deleteUser = function (user) {
+                $http.get('/deleteUser?user_id=' + user._id).then(function (response) {
+                    scope.usersList = response.data;
+                }, function (response) {
+                    alert(response.statusText + " - " + response.data);
+                });
+            };
+            $http.get("/userslist").then(function (response) {
+                scope.usersList = response.data;
+            }, function (response) {
+                alert(response.statusText + " - " + response.data);
+            });
+        }
+    ]);

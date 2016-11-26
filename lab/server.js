@@ -10,6 +10,7 @@ var cookieParser = require('cookie-parser');
 var mongo = require("mongoose");
 
 console.log('Pending DB connection');
+mongo.Promise = global.Promise;
 var db = mongo.connect('mongodb://localhost:27017/myfirstdatabase', function(err) {
     if(!err) {
         console.log("Connected to DB")
@@ -81,25 +82,13 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
     extended: true
 }));
 app.use(cookieParser());
+app.use(loadUser);
 
 app.get('/', function(req, res) {
     var pathname = url.parse(req.url).pathname;
     console.log("Request for " + pathname + " received.");
-    userID = req.cookies['userID'];
-    var found = -1;
-
-    for(var i = 0; i < userslist.length; i++){
-        if(userslist[i].id === userID){
-            found = i;
-            break;
-        }
-    }
-    if(found == -1){
-        res.render('pages/main',{user: 'Guest'});
-    }
-    else{
-        res.render('pages/main',{user: userslist[found].user});
-    }
+    //console.log("req.user " + req.user );//////////////////////////////
+    res.render('pages/main',{user: req.user});
 });
 
 
@@ -112,7 +101,6 @@ app.get('/branches', function(req, res) {
         // object of all the branches
         res.json(branchlist);
     });
-    //res.send(JSON.stringify(branchlist));
 });
 
 
@@ -133,27 +121,42 @@ app.get('/flowerslist', function(req, res) {
 app.get('/userslist', function(req, res) {
     var pathname = url.parse(req.url).pathname;
     console.log("Request for " + pathname + " received.");
-    res.send(JSON.stringify(userslist));
+
+    User.find({isActive: true}, function(err, users) {
+        if (err) throw err;
+        // object of all the branches
+        res.json(users);
+    });
 });
 
+
+app.get('/load_user_management_by_permission', function (req, res) {
+    var pathname = url.parse(req.url).pathname;
+    console.log("Request for " + pathname + " received.");
+
+    if (req.user.permission < 2) {
+        res.send('No permission for users management', 401);
+    }
+    else if (req.user.permission == 2) {
+        res.sendFile('public/pages/user_Management_worker.html', { root: __dirname });
+    }
+    else {
+        res.sendFile('public/pages/user_Management_manager.html', { root: __dirname });
+    }
+});
 
 
 app.get('/Login', function(req, res) {
     var pathname = url.parse(req.url).pathname;
     console.log("Request for " + pathname + " received.");
 
-    var found = -1;
-
-    for(var i = 0; i < userslist.length; i++){
-        if((userslist[i].user === req.query.user) && (userslist[i].password === req.query.password)){
-            found = i;
-            break;
+    User.find({username:req.query.username, password:req.query.password, isActive: true}, function (err, user) {
+        if (err) throw err;
+        if (user.length == 1){
+            res.cookie('userID', user[0]._id);
+            res.redirect("/");
         }
-    }
-    if(found !== -1){
-        res.cookie('userID', userslist[found].id);
-        res.redirect("/");
-    }
+    });
 });
 
 
@@ -163,6 +166,85 @@ var server = app.listen(5557, function () {
     var port = server.address().port
     console.log("app listening on http://%s:%s", host, port)
 })
+
+
+app.get('/addUser', function (req, res) {
+    if (req.user.permission < 2 || (req.user.permission < 3 && req.query.permission > 0)) {
+        res.send('No permission for that type of user', 401);
+        return;
+    }
+
+    var user = new User({
+        name: req.query.name,
+        username: req.query.username,
+        password: req.query.password,
+        permission: req.query.permission,
+        isActive: true,
+        meta: {birthday: req.query.birthday,
+            website: req.query.website},
+        branch_number: req.query.branch_number
+    });
+    user.save(function (err) {
+        if (err) throw err;
+        User.find({isActive: true}, function (err, users) {
+            if (err) throw err;
+            // object of all the branches
+            res.json(users);
+        });
+    });
+});
+
+app.get('/editUser', function (req, res) {
+    if (req.user.permission < 2 || (req.user.permission < 3 && req.query.permission > 0)) {
+        res.send('No permission for that type of user', 401);
+        return;
+    }
+
+    var userID = req.query.user_id;
+    User.findById(userID, function (err, user) {
+        if (err) throw err;
+
+        user.name = req.query.name;
+        user.username = req.query.username;
+        user.password = req.query.password;
+        user.permission = req.query.permission;
+        user.meta.birthday = req.query.birthday;
+        user.meta.website = req.query.website;
+        user.branch_number = req.query.branch_number;
+
+        user.save(function (err) {
+            if (err) throw err;
+            User.find({isActive: true}, function (err, users) {
+                if (err) throw err;
+                // object of all the branches
+                res.json(users);
+            });
+        });
+    });
+});
+
+app.get('/deleteUser', function (req, res) {
+    console.log("req.user.permission " + req.user.permission);
+    console.log("req.query.permission " + req.query.permission);
+    if (req.user.permission < 2 || (req.user.permission < 3 && req.query.permission > 0)) {
+        res.send('No permission for that type of user', 401);
+        return;
+    }
+
+    var userID = req.query.user_id;
+    User.findById(userID, function (err, user) {
+        if (err) throw err;
+        user.isActive = false;
+        user.save(function (err) {
+            if (err) throw err;
+            User.find({isActive: true}, function (err, users) {
+                if (err) throw err;
+                // object of all the branches
+                res.json(users);
+            });
+        });
+    });
+});
 
 
 
@@ -262,7 +344,7 @@ flowerslist.push({
     id:'6'
 });
 
-*/
+
 
 
 var userslist = [];
@@ -312,6 +394,38 @@ userslist.push( {
     accountType:'manager',
     branchesNum:'NULL'
 });
+
+ */
+
+
+function loadUser(req, res, next) {
+    var userID = req.cookies['userID'];
+    if (userID) {
+        User.findById(userID, function (err, user) {
+            if (err) throw err;
+            if (user) {
+                req.user = user;
+                req.user.authenticated = true;
+            }
+            else {
+                setEmptyUser(req);
+            }
+            next();
+        });
+    }
+    else {
+        setEmptyUser(req);
+        next();
+    }
+}
+
+function setEmptyUser(req) {
+    req.user = new User();
+    req.user.authenticated = false;
+    req.user.name = 'Guest';
+    req.user.permission = 0;
+}
+
 
 
 function AddBranch(pname, pnumber, paddress, pstate, popeningHours, pphoneNumber) {

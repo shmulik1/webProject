@@ -271,23 +271,17 @@
 				<li class="active"><a data-toggle="tab" href="#about">About</a></li>
 				<li><a data-toggle="tab" href="#branches">Branches</a></li>
 				<li><a data-toggle="tab" href="#catalog">Catalog</a></li>
-				<!--li><a data-toggle="tab" href="#about">Home</a></li-->
 				<li><a data-toggle="tab" href="#contact">Contact</a></li>
-				<%if (user !== 'Guest'){%>
-				<li id='user_management_li'><a data-toggle="tab" href="#user_Management" >User Management</a></li>
+				<%if (user.authenticated && user.permission > 1) {%>
+				<li><a data-toggle="tab" href="#user_Management" >User Management</a></li>
 				<%}%>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li class="active"><a id="welcomeLine" href="#" ><span></span> Welcome! <strong>
-							<%if (user === 'Guest') { %>
-							Guest
-							<% } else{ %>
-							<%= user %>
-							<% } %>
-						</strong></a>
+				<li class="active"><a id="welcomeLine" href="#" ><span></span>
+						Welcome! <strong> <%= user.name%></strong></a>
 				</li>
 				<li><a id="Sign-Up-button" href="#" data-toggle="modal" data-target="#signUpModal" ><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-				<%if (user == 'Guest'){%>
+				<%if (!user.authenticated) { %>
 				<li><a id="login-button" href="#" data-toggle="modal" data-target="#loginModal" ><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
 				<%} else {%>
 				<li><a id="logout-button" href="#" data-toggle="modal" data-target="#logoutModal" ><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
@@ -364,7 +358,7 @@
 		$("#login_button").click(function () {
 			var username = $("#login_username").val();
 			var password = $("#login_password").val();
-			$.get("/login", {user:username, password:password}, function (data) {
+			$.get("/login", {username:username, password:password}, function (data) {
 				window.location="/";
 			});
 		});
