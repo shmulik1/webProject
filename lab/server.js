@@ -32,7 +32,10 @@ var app = express();
 
 // create the schema:
 Branch.find({}, function (err, branches) {
-    if (err) throw err;
+    if (err) {
+        console.log('ERROR in Branch.find' ,'error message: ' + err.message,'error name: ' + err.name);
+        throw err.message;
+    }
     if (branches.length == 0){
         AddBranch('S&Y Rishon-Leziyon', 1, 'Sigalit 1 Rishon Leziyon', 'dan', '08:00-19:00', '03-5701234');
         AddBranch('S&Y Jerusalem', 2, 'Nurit 2 Jerusalem', 'south', '08:00-19:00', '02-6418187');
@@ -45,7 +48,10 @@ Branch.find({}, function (err, branches) {
 });
 
 User.find({}, function (err, users) {
-    if (err) throw err;
+    if (err) {
+        console.log('ERROR in User.find' ,'error message: ' + err.message,'error name: ' + err.name);
+        throw err.message;
+    }
     if (users.length == 0){
         AddUser("Shmulik Kreitenberger", 'sk', '1234', 3, new Date('1987-12-20'), 'google.com', 1);
         AddUser("Yakov Shechter", 'Yakov', '1234', 3, new Date('1989-02-02'), 'yahoo.com', 1);
@@ -63,7 +69,10 @@ User.find({}, function (err, users) {
 });
 
 Flower.find({}, function (err, flowers) {
-    if (err) throw err;
+    if (err) {
+        console.log('ERROR in Flower.find' ,'error message: ' + err.message,'error name: ' + err.name);
+        throw err.message;
+    }
     if (flowers.length == 0){
         AddFlower('סחלב הביצות', "Anacamptis laxiflora (lax-flowered orchid, loose-flowered orchid, or green-winged meadow orchid) is a species of orchid. Wide distribution range in Europe and Asia as far north as in Gotland (Sweden). Tall plant, grows up to 60 cm high. Found in wet meadows with alcaline soil.[1] Common in Normandy and Brittany (France), in United Kingdom represented only on Channel Islands, where it is called Jersey Orchid. Notable habitat is Le Noir Pré meadow in Jersey, where each year in late May - early June can be observed mass bloom of these orchids.", 'purple', '/images/Orchis.jpg', '21.80');
         AddFlower('אירוס', "Iris is a genus of 260–300[1][2] species of flowering plants with showy flowers. It takes its name from the Greek word for a rainbow, which is also the name for the Greek goddess of the rainbow, Iris. Some authors state that the name refers to the wide variety of flower colors found among the many species.[3] As well as being the scientific name, iris is also very widely used as a common name for all Iris species, as well as some belonging to other closely related genera. A common name for some species is 'flags', while the plants of the subgenus Scorpiris are widely known as 'junos', particularly in horticulture. It is a popular garden flower. The often-segregated, monotypic genera Belamcanda (blackberry lily, I. domestica), Hermodactylus (snake's head iris, I. tuberosa), and Pardanthopsis (vesper iris, I. dichotoma) are currently included in Iris. Three Iris varieties are used in the Iris flower data set outlined by Ronald Fisher in his 1936 paper The use of multiple measurements in taxonomic problems as an example of linear discriminant analysis.", 'blue', '/images/Iris.jpg', '13.90');
@@ -97,7 +106,10 @@ app.get('/branches', function(req, res) {
     console.log("Request for " + pathname + " received.");
 
     Branch.find({isActive: true}, function(err, branchlist) {
-        if (err) throw err;
+        if (err) {
+            console.log('ERROR in branches/find' ,'error message: ' + err.message,'error name: ' + err.name);
+            throw err.message;
+        }
         // object of all the branches
         res.json(branchlist);
     });
@@ -110,7 +122,10 @@ app.get('/flowerslist', function(req, res) {
     console.log("Request for " + pathname + " received.");
 
     Flower.find({isActive: true}, function(err, flowerslist) {
-        if (err) throw err;
+        if (err) {
+            console.log('ERROR in flowerslist/find' ,'error message: ' + err.message,'error name: ' + err.name);
+            throw err.message;
+        }
         // object of all the flowers
         res.json(flowerslist);
     });
@@ -123,7 +138,10 @@ app.get('/userslist', function(req, res) {
     console.log("Request for " + pathname + " received.");
 
     User.find({isActive: true}, function(err, users) {
-        if (err) throw err;
+        if (err) {
+            console.log('ERROR in userslist/find' ,'error message: ' + err.message,'error name: ' + err.name);
+            throw err.message;
+        }
         // object of all the branches
         res.json(users);
     });
@@ -132,10 +150,10 @@ app.get('/userslist', function(req, res) {
 
 app.get('/load_user_management_by_permission', function (req, res) {
     var pathname = url.parse(req.url).pathname;
-    console.log("Request for " + pathname + " received.");
+    //console.log("Request for " + pathname + " received.");
 
     if (req.user.permission < 2) {
-        res.send('No permission for users management', 401);
+        res.send('No permission for users management', 404);
     }
     else if (req.user.permission == 2) {
         res.sendFile('public/pages/user_Management_worker.html', { root: __dirname });
@@ -151,7 +169,10 @@ app.get('/Login', function(req, res) {
     console.log("Request for " + pathname + " received.");
 
     User.find({username:req.query.username, password:req.query.password, isActive: true}, function (err, user) {
-        if (err) throw err;
+        if (err) {
+            console.log('ERROR in Login/find' ,'error message: ' + err.message,'error name: ' + err.name);
+            throw err.message;
+        }
         if (user.length == 1){
             res.cookie('userID', user[0]._id);
             res.redirect("/");
@@ -170,7 +191,7 @@ var server = app.listen(5557, function () {
 
 app.get('/addUser', function (req, res) {
     if (req.user.permission < 2 || (req.user.permission < 3 && req.query.permission > 0)) {
-        res.send('No permission for that type of user', 401);
+        res.send('No permission for that type of user', 404);
         return;
     }
 
@@ -185,9 +206,15 @@ app.get('/addUser', function (req, res) {
         branch_number: req.query.branch_number
     });
     user.save(function (err) {
-        if (err) throw err;
+        if (err) {
+            console.log('ERROR in addUser/save' ,'error message: ' + err.message,'error name: ' + err.name);
+            throw err.message;
+        }
         User.find({isActive: true}, function (err, users) {
-            if (err) throw err;
+            if (err) {
+                console.log('ERROR in addUser/save/find' ,'error message: ' + err.message,'error name: ' + err.name);
+                throw err.message;
+            }
             // object of all the branches
             res.json(users);
         });
@@ -196,13 +223,16 @@ app.get('/addUser', function (req, res) {
 
 app.get('/editUser', function (req, res) {
     if (req.user.permission < 2 || (req.user.permission < 3 && req.query.permission > 0)) {
-        res.send('No permission for that type of user', 401);
+        res.send('No permission for that type of user', 404);
         return;
     }
 
     var userID = req.query.user_id;
     User.findById(userID, function (err, user) {
-        if (err) throw err;
+        if (err) {
+            console.log('ERROR in editUser/findById' ,'error message: ' + err.message,'error name: ' + err.name);
+            throw err.message;
+        }
 
         user.name = req.query.name;
         user.username = req.query.username;
@@ -213,9 +243,15 @@ app.get('/editUser', function (req, res) {
         user.branch_number = req.query.branch_number;
 
         user.save(function (err) {
-            if (err) throw err;
+            if (err) {
+                console.log('ERROR in editUser/save' ,'error message: ' + err.message,'error name: ' + err.name);
+                throw err.message;
+            }
             User.find({isActive: true}, function (err, users) {
-                if (err) throw err;
+                if (err) {
+                    console.log('ERROR in editUser/save/find' ,'error message: ' + err.message,'error name: ' + err.name);
+                    throw err.message;
+                }
                 // object of all the branches
                 res.json(users);
             });
@@ -227,18 +263,27 @@ app.get('/deleteUser', function (req, res) {
     console.log("req.user.permission " + req.user.permission);
     console.log("req.query.permission " + req.query.permission);
     if (req.user.permission < 2 || (req.user.permission < 3 && req.query.permission > 0)) {
-        res.send('No permission for that type of user', 401);
+        res.send('No permission for that type of user', 404);
         return;
     }
 
     var userID = req.query.user_id;
     User.findById(userID, function (err, user) {
-        if (err) throw err;
+        if (err) {
+            console.log('ERROR in deleteUser/findById' ,'error message: ' + err.message,'error name: ' + err.name);
+            throw err.message;
+        }
         user.isActive = false;
         user.save(function (err) {
-            if (err) throw err;
+            if (err) {
+                console.log('ERROR in deleteUser/findById/save' ,'error message: ' + err.message,'error name: ' + err.name);
+                throw err.message;
+            }
             User.find({isActive: true}, function (err, users) {
-                if (err) throw err;
+                if (err) {
+                    console.log('ERROR in deleteUser/findById/save/find' ,'error message: ' + err.message,'error name: ' + err.name);
+                    throw err.message;
+                }
                 // object of all the branches
                 res.json(users);
             });
@@ -248,161 +293,14 @@ app.get('/deleteUser', function (req, res) {
 
 
 
-/*
-
-var branchlist=[];
-
-branchlist.push({
-    name:'S&Y Haifa',
-    id:'01', address:'Horev 1',
-    phone:'04-1234567',
-    state:'north' ,
-    valid:'yes'
-});
-branchlist.push({
-    name:'S&Y Naria',
-    id:'04', address:'Streat 1',
-    phone:'08-1234567',
-    state:'north' ,
-    valid:'yes'
-});
-branchlist.push({
-    name:'S&Y Tel-Aviv',
-    id:'02',
-    address:'Yarqon 1',
-    phone:'03-1234567',
-    state:'dan',
-    valid:'yes'
-});
-branchlist.push({
-    name:'S&Y Bnei-Brak',
-    id:'05',
-    address:'Miron 1',
-    phone:'03-7654321',
-    state:'dan',
-    valid:'yes'
-});
-branchlist.push({
-    name:'S&Y Jerusalem',
-    id:'03',
-    address:'Ben-Yehuda 1',
-    phone:'02-1234567',
-    state:'south',
-    valid:'yes'
-});
-
-
-
-var flowerslist = [];
-
-flowerslist.push({
-    title:'סחלב הביצות',
-    img:'/images/Orchis.jpg',
-    desc:"Anacamptis laxiflora (lax-flowered orchid, loose-flowered orchid, or green-winged meadow orchid) is a species of orchid. Wide distribution range in Europe and Asia as far north as in Gotland (Sweden). Tall plant, grows up to 60 cm high. Found in wet meadows with alcaline soil.[1] Common in Normandy and Brittany (France), in United Kingdom represented only on Channel Islands, where it is called Jersey Orchid. Notable habitat is Le Noir Pré meadow in Jersey, where each year in late May - early June can be observed mass bloom of these orchids.",
-    color:'purple',
-    price:'42$',
-    id:'1'
-});
-flowerslist.push({
-    title:'אירוס',
-    img:'/images/Iris.jpg',
-    desc:"Iris is a genus of 260–300[1][2] species of flowering plants with showy flowers. It takes its name from the Greek word for a rainbow, which is also the name for the Greek goddess of the rainbow, Iris. Some authors state that the name refers to the wide variety of flower colors found among the many species.[3] As well as being the scientific name, iris is also very widely used as a common name for all Iris species, as well as some belonging to other closely related genera. A common name for some species is 'flags', while the plants of the subgenus Scorpiris are widely known as 'junos', particularly in horticulture. It is a popular garden flower. The often-segregated, monotypic genera Belamcanda (blackberry lily, I. domestica), Hermodactylus (snake's head iris, I. tuberosa), and Pardanthopsis (vesper iris, I. dichotoma) are currently included in Iris. Three Iris varieties are used in the Iris flower data set outlined by Ronald Fisher in his 1936 paper The use of multiple measurements in taxonomic problems as an example of linear discriminant analysis.",
-    color:'blue',
-    price:'35$',
-    id:'2'
-});
-flowerslist.push({
-    title:'כלנית מצויה',
-    img:'/images/Anemone.jpg',
-    desc:"Anemone coronaria (poppy anemone,[1] Spanish marigold, dağ lalesi in Turkish, kalanit in Hebrew, shaqa'iq An-Nu'man in Arabic) is a species of flowering plant in the genus Anemone, native to the Mediterranean region.",
-    color:'red',
-    price:'20$',
-    id:'3'
-});
-flowerslist.push({
-    title:'חמנית מצויה',
-    img:'/images/sunflower.jpg',
-    desc:"Helianthus annuus, the common sunflower, is a large annual forb of the genus Helianthus grown as a crop for its edible oil and edible fruits (sunflower seeds). This sunflower species is also used as bird food, as livestock forage (as a meal or a silage plant), and in some industrial applications. The plant was first domesticated in the Americas. Wild Helianthus annuus is a widely branched annual plant with many flower heads. The domestic sunflower, however, often possesses only a single large inflorescence (flower head) atop an unbranched stem. The name sunflower may derive from the flower's head's shape, which resembles the sun, or from the false impression that the blooming plant appears to slowly turn its flower towards the sun as the latter moves across the sky on a daily basis.",
-    color:'yellow',
-    price:'10$',
-    id:'4'
-});
-flowerslist.push({
-    title:'מרווה',
-    img:'/images/Salvia.jpg',
-    desc:"Salvia is the largest genus of plants in the mint family, Lamiaceae, with nearly 1000 species of shrubs, herbaceous perennials, and annuals.[3][4][5] Within the Lamiaceae, Salvia is part of the tribe Mentheae within the subfamily Nepetoideae.[3] It is one of several genera commonly referred to as sage.",
-    color:'purple',
-    price:'29$',
-    id:'5'
-});
-flowerslist.push({
-    title:'דליה',
-    img:'/images/dahlia.jpg',
-    desc:"Dahlia flower is a national flower of Mexico and is named after 18th century botanist Anders Dahl. It belongs to an asteraceae genus with over 30 species in its family.  Dahlia has a vast range of hues from bronze to red and white to purple and is grown throughout the year.",
-    color:'pink',
-    price:'25$',
-    id:'6'
-});
-
-
-
-
-var userslist = [];
-
-userslist.push({
-    firstName:'David ',
-    lastName:'Levy',
-    id:'30303030',
-    user:'david',
-    password:'1234',
-    accountType:'employee',
-    branchesNum:'01'
-});
-userslist.push( {
-    firstName:'Shmulik ',
-    lastName:'K',
-    id:'301301301',
-    user:'SK',
-    password:'1234',
-    accountType:'manager',
-    branchesNum:'NULL'
-});
-userslist.push({
-    firstName:'David ',
-    lastName:'Levy',
-    id:'40303030',
-    user:'david',
-    password:'1234',
-    accountType:'supplier',
-    branchesNum:'01'
-});
-userslist.push({
-    firstName:'Itzick ',
-    lastName:'berko',
-    id:'50303030',
-    user:'itzick',
-    password:'1234',
-    accountType:'customer',
-    branchesNum:'02'
-});
-userslist.push( {
-    firstName:'Dan ',
-    lastName:'Lin',
-    id:'60303030',
-    user:'dan',
-    password:'1234',
-    accountType:'manager',
-    branchesNum:'NULL'
-});
-
- */
-
-
 function loadUser(req, res, next) {
     var userID = req.cookies['userID'];
     if (userID) {
         User.findById(userID, function (err, user) {
-            if (err) throw err;
+            if (err) {
+                console.log('ERROR in loadUser/findById' ,'error message: ' + err.message,'error name: ' + err.name);
+                throw err.message;
+            }
             if (user) {
                 req.user = user;
                 req.user.authenticated = true;
@@ -439,14 +337,20 @@ function AddBranch(pname, pnumber, paddress, pstate, popeningHours, pphoneNumber
         phoneNumber: pphoneNumber
     });
     branch.save(function (err) {
-        if (err) throw err;
+        if (err) {
+            console.log('ERROR in AddBranch/save' ,'error message: ' + err.message,'error name: ' + err.name);
+            throw err.message;
+        }
         console.log('branch saved');
     });
 }
 
 function UpdateBranch(branch_new) {
     Branch.findById(branch_new._id, function (err, branch) {
-        if (err) throw err;
+        if (err) {
+            console.log('ERROR in UpdateBranch' ,'error message: ' + err.message,'error name: ' + err.name);
+            throw err.message;
+        }
         branch.name = branch_new.name;
         branch.address = branch_new.address;
         branch.state = branch_new.state;
@@ -455,7 +359,10 @@ function UpdateBranch(branch_new) {
         branch.number = branch_new.number;
         branch.phoneNumber = branch_new.phoneNumber;
         branch.save(function (err) {
-            if (err) throw err;
+            if (err) {
+                console.log('ERROR in UpdateBranch/save' ,'error message: ' + err.message,'error name: ' + err.name);
+                throw err.message;
+            }
             console.log('branch updated');
         });
     });
@@ -478,7 +385,10 @@ function AddUser(pname, pusername, ppassword, ppermission, pbirthday, pwebsite, 
         branch_number: pbranch_number
     });
     user.save(function (err) {
-        if (err) throw err;
+        if (err) {
+            console.log('ERROR in AddUser/save' ,'error message: ' + err.message,'error name: ' + err.name);
+            throw err.message;
+        }
         console.log('user saved');
     });
 }
@@ -493,14 +403,20 @@ function AddFlower(name, description, color, image_link, price) {
         isActive: true
     });
     flower.save(function (err) {
-        if (err) throw err;
+        if (err) {
+            console.log('ERROR in AddFlower/save' ,'error message: ' + err.message,'error name: ' + err.name);
+            throw err.message;
+        }
         console.log('flower saved');
     });
 }
 
 function UpdateFlower(flower_new) {
     Flower.findById(flower_new._id, function (err, flower) {
-        if (err) throw err;
+        if (err) {
+            console.log('ERROR in UpdateFlower' ,'error message: ' + err.message,'error name: ' + err.name);
+            throw err.message;
+        }
         flower.isActive = flower_new.isActive;
         flower.name = flower_new.name;
         flower.description = flower_new.description;
@@ -508,7 +424,10 @@ function UpdateFlower(flower_new) {
         flower.image_link = flower_new.image_link;
         flower.price = flower_new.price;
         flower.save(function (err) {
-            if (err) throw err;
+            if (err) {
+                console.log('ERROR in UpdateFlower/save' ,'error message: ' + err.message,'error name: ' + err.name);
+                throw err.message;
+            }
             console.log('flower updated');
         });
     });
