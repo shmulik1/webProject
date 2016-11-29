@@ -188,19 +188,20 @@ scotchApp.controller('logIn_Controller', function ($scope){
         function branchesManagementController($http) {
             var scope = this;
             scope.addBranch = function (branch) {
+                alert('/addBranch?name=' + branch.name + '&number=' + branch.number + '&address=' + branch.address + '&hours=' + branch.openingHours + '&state=' + branch.state);
                 if (!branch || !branch.name || !branch.address || !branch.openingHours || !branch.state ){
                     alert('Fill all the fields!');
                 }
-                $http.get('/addBranch?name=' + branch.name + '&num=' + branch.number + '&address=' + branch.address + '&h=' + branch.openingHours + '&state=' + branch.state).then(function (response) {
+                $http.get('/addBranch?name=' + branch.name + '&number=' + branch.number + '&address=' + branch.address + '&hours=' + branch.openingHours + '&state=' + branch.state).then(function (response) {
                     scope.branchesList = response.data;
                 }, function (response) {
                     alert(response.statusText + " - " + response.data + " response " + response);
                 });
             };
             scope.editBranch = function (branch) {
-                alert('&name=' + branch.name);
-                alert('/editBranch?branch_id=' + branch._id + '&name=' + branch.name + '&address=' + branch.address + '&h=' + branch.openingHours + '&state=' + branch.state);
-                $http.get('/editBranch?branch_id=' + branch._id + '&name=' + branch.name + '&address=' + branch.address + '&h=' + branch.openingHours + '&state=' + branch.state).then(function (response) {
+                //alert('&name=' + branch.name);
+                //alert('/editBranch?branch_id=' + branch._id + '&name=' + branch.name + '&address=' + branch.address + '&hours=' + branch.openingHours + '&state=' + branch.state);
+                $http.get('/editBranch?branch_id=' + branch._id + '&name=' + branch.name + '&address=' + branch.address + '&hours=' + branch.openingHours + '&state=' + branch.state).then(function (response) {
                     scope.branchesList = response.data;
                 }, function (response) {
                     alert(response.statusText + " - " + response.data + " response " + response);

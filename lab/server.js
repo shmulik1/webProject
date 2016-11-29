@@ -362,7 +362,7 @@ app.get('/editBranch', function (req, res) {
     var branchID = req.query.branch_id;
     var branchName = req.query.name;
     var branchAddress = req.query.address;
-    var hours = req.query.h;
+    var hours = req.query.hours;
     var state = req.query.state;
     console.log("req.query.name " + req.query.name );
     console.log("branchName " + branchName );
@@ -405,18 +405,19 @@ app.get('/addBranch', function (req, res) {
         res.send('Please login as admin first', 401);
         return;
     }
-    var branchName = req.query.name;
-    var branchAddress = req.query.address;
-    var hours = req.query.h;
-    var num = req.query.num;
-    var state = req.query.state;
+    //var branchName = req.query.name;
+    //var branchAddress = req.query.address;
+    //var hours = req.query.h;
+    //var num = req.query.num;
+    //var state = req.query.state;
+    console.log('/addBranch req.query.name ' + req.query.name + ' req.query.number ' + req.query.number + ' req.query.state ' + req.query.state + ' req.query.address ' + req.query.address + ' req.query.hours ' + req.query.hours);
     var branch = new Branch({
-        name: branchName,
-        number: num,
-        state: state,
-        address: branchAddress,
+        name: req.query.name,
+        number: req.query.number,
+        state: req.query.state,
+        address: req.query.address,
         isActive: true,
-        openingHours: hours
+        openingHours: req.query.hours
     });
     branch.save(function (err) {
         if (err) {
