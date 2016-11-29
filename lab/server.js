@@ -37,13 +37,13 @@ Branch.find({}, function (err, branches) {
         throw err.message;
     }
     if (branches.length == 0){
-        AddBranch('S&Y Rishon-Leziyon', 1, 'Sigalit 1 Rishon Leziyon', 'dan', '08:00-19:00', '03-5701234');
-        AddBranch('S&Y Jerusalem', 2, 'Nurit 2 Jerusalem', 'south', '08:00-19:00', '02-6418187');
-        AddBranch('S&Y Tel-Aviv', 3, 'Narkis 3 TLV', 'dan', '08:00-19:00', '03-6771234');
-        AddBranch('S&Y Naria', 4, 'Havazelet 4 Naarya', 'north', '08:00-19:00', '04-5781234');
-        AddBranch('S&Y Petah-Tikva', 5, 'Yakinton 5 Petah Tikva', 'dan', '08:00-19:00', '03-6191234');
-        AddBranch('S&Y Eilat', 6, 'Vered 6 Eilat', 'south', '08:00-19:00', '08-6128877');
-        AddBranch('S&Y Ashdod', 7, 'Rakefet 7 Ashdod', 'dan', '08:00-19:00', '09-9326543');
+        AddBranch('S and Y Rishon-Leziyon', 1, 'Sigalit 1 Rishon Leziyon', 'dan', '08:00-19:00', '03-5701234');
+        AddBranch('S and Y Jerusalem', 2, 'Nurit 2 Jerusalem', 'south', '08:00-19:00', '02-6418187');
+        AddBranch('S and Y Tel-Aviv', 3, 'Narkis 3 TLV', 'dan', '08:00-19:00', '03-6771234');
+        AddBranch('S and Y Naria', 4, 'Havazelet 4 Naarya', 'north', '08:00-19:00', '04-5781234');
+        AddBranch('S and Y Petah-Tikva', 5, 'Yakinton 5 Petah Tikva', 'dan', '08:00-19:00', '03-6191234');
+        AddBranch('S and Y Eilat', 6, 'Vered 6 Eilat', 'south', '08:00-19:00', '08-6128877');
+        AddBranch('S and Y Ashdod', 7, 'Rakefet 7 Ashdod', 'dan', '08:00-19:00', '09-9326543');
     }
 });
 
@@ -101,6 +101,7 @@ app.get('/', function(req, res) {
 });
 
 
+
 app.get('/branches', function(req, res) {
     var pathname = url.parse(req.url).pathname;
     console.log("Request for " + pathname + " received.");
@@ -115,6 +116,22 @@ app.get('/branches', function(req, res) {
     });
 });
 
+
+
+app.get('/branchesManagement', function (req, res) {
+    var pathname = url.parse(req.url).pathname;
+    console.log("Request for " + pathname + " received.");
+
+    if (!req.user.authenticated || req.user.permission < 3) {
+        res.send('Please login as admin first', 401);
+        return;
+    }
+    Branch.find({isActive: true}, function(err, branches) {
+        if (err) throw err;
+        // object of all the branches
+        res.json(branches);
+    });
+});
 
 
 app.get('/flowerslist', function(req, res) {
@@ -150,7 +167,7 @@ app.get('/userslist', function(req, res) {
 
 app.get('/load_user_management_by_permission', function (req, res) {
     var pathname = url.parse(req.url).pathname;
-    //console.log("Request for " + pathname + " received.");
+    console.log("Request for " + pathname + " received.");
 
     if (req.user.permission < 2) {
         res.send('No permission for users management', 404);
@@ -190,6 +207,9 @@ var server = app.listen(5557, function () {
 
 
 app.get('/addUser', function (req, res) {
+    var pathname = url.parse(req.url).pathname;
+    console.log("Request for " + pathname + " received.");
+
     if (req.user.permission < 2 || (req.user.permission < 3 && req.query.permission > 0)) {
         res.send('No permission for that type of user', 404);
         return;
@@ -222,6 +242,9 @@ app.get('/addUser', function (req, res) {
 });
 
 app.get('/editUser', function (req, res) {
+    var pathname = url.parse(req.url).pathname;
+    console.log("Request for " + pathname + " received.");
+
     if (req.user.permission < 2 || (req.user.permission < 3 && req.query.permission > 0)) {
         res.send('No permission for that type of user', 404);
         return;
@@ -260,6 +283,9 @@ app.get('/editUser', function (req, res) {
 });
 
 app.get('/deleteUser', function (req, res) {
+    var pathname = url.parse(req.url).pathname;
+    console.log("Request for " + pathname + " received.");
+
     console.log("req.user.permission " + req.user.permission);
     console.log("req.query.permission " + req.query.permission);
     if (req.user.permission < 2 || (req.user.permission < 3 && req.query.permission > 0)) {
@@ -292,8 +318,127 @@ app.get('/deleteUser', function (req, res) {
 });
 
 
+app.get('/deleteBranch', function (req, res) {
+    var pathname = url.parse(req.url).pathname;
+    console.log("Request for " + pathname + " received.");
+
+    if (!req.user.authenticated || req.user.permission < 3) {
+        res.send('Please login as admin first', 401);
+        return;
+    }
+    var branchID = req.query.branch_id;
+    Branch.findById(branchID, function (err, brunch) {
+        if (err) {
+            console.log('ERROR in deleteBranch/findById' ,'error message: ' + err.message,'error name: ' + err.name);
+            throw err.message;
+        }
+        brunch.isActive = false;
+        brunch.save(function (err) {
+            if (err) {
+                console.log('ERROR in deleteBranch/findById/save' ,'error message: ' + err.message,'error name: ' + err.name);
+                throw err.message;
+            }
+            Branch.find({isActive: true}, function (err, branches) {
+                if (err) {
+                    console.log('ERROR in deleteBranch/findById/save/find' ,'error message: ' + err.message,'error name: ' + err.name);
+                    throw err.message;
+                }
+                // object of all the branches
+                res.json(branches);
+            });
+        });
+    });
+});
+
+
+app.get('/editBranch', function (req, res) {
+    var pathname = url.parse(req.url).pathname;
+    console.log("Request for " + pathname + " received.");
+
+    if (!req.user.authenticated || req.user.permission < 3) {
+        res.send('Please login as admin first', 401);
+        return;
+    }
+    var branchID = req.query.branch_id;
+    var branchName = req.query.name;
+    var branchAddress = req.query.address;
+    var hours = req.query.h;
+    var state = req.query.state;
+    console.log("req.query.name " + req.query.name );
+    console.log("branchName " + branchName );
+
+    Branch.findById(branchID, function (err, brunch) {
+        if (err) {
+            console.log('ERROR in editBranch/findById' ,'error message: ' + err.message,'error name: ' + err.name);
+            throw err.message;
+        }
+        console.log("brunch.name " + brunch.name );
+        brunch.name = branchName;
+        console.log("brunch.name = branchName");
+        console.log("brunch.name " + brunch.name );
+        brunch.address = branchAddress;
+        brunch.openingHours = hours;
+        brunch.state = state;
+        brunch.save(function (err) {
+            if (err) {
+                console.log('ERROR in editBranch/findById/save' ,'error message: ' + err.message,'error name: ' + err.name);
+                throw err.message;
+            }
+            Branch.find({isActive: true}, function (err, branches) {
+                if (err) {
+                    console.log('ERROR in editBranch/findById/save/find' ,'error message: ' + err.message,'error name: ' + err.name);
+                    throw err.message;
+                }
+                // object of all the branches
+                res.json(branches);
+            });
+        });
+    });
+});
+
+
+app.get('/addBranch', function (req, res) {
+    var pathname = url.parse(req.url).pathname;
+    console.log("Request for " + pathname + " received.");
+
+    if (!req.user.authenticated || req.user.permission < 3) {
+        res.send('Please login as admin first', 401);
+        return;
+    }
+    var branchName = req.query.name;
+    var branchAddress = req.query.address;
+    var hours = req.query.h;
+    var num = req.query.num;
+    var state = req.query.state;
+    var branch = new Branch({
+        name: branchName,
+        number: num,
+        state: state,
+        address: branchAddress,
+        isActive: true,
+        openingHours: hours
+    });
+    branch.save(function (err) {
+        if (err) {
+            console.log('ERROR in addBranch/save' ,'error message: ' + err.message,'error name: ' + err.name);
+            throw err.message;
+        }
+        Branch.find({isActive: true}, function (err, branches) {
+            if (err) {
+                console.log('ERROR in deleteBranch/save/find' ,'error message: ' + err.message,'error name: ' + err.name);
+                throw err.message;
+            }
+            // object of all the branches
+            res.json(branches);
+        });
+    });
+});
+
+
 
 function loadUser(req, res, next) {
+    console.log("Request for loadUser received.");
+
     var userID = req.cookies['userID'];
     if (userID) {
         User.findById(userID, function (err, user) {
@@ -318,6 +463,8 @@ function loadUser(req, res, next) {
 }
 
 function setEmptyUser(req) {
+    console.log("Request for setEmptyUser received.");
+
     req.user = new User();
     req.user.authenticated = false;
     req.user.name = 'Guest';
@@ -327,6 +474,8 @@ function setEmptyUser(req) {
 
 
 function AddBranch(pname, pnumber, paddress, pstate, popeningHours, pphoneNumber) {
+    console.log("Request for AddBranch received.");
+
     var branch = new Branch({
         name: pname,
         number: pnumber,
@@ -346,6 +495,8 @@ function AddBranch(pname, pnumber, paddress, pstate, popeningHours, pphoneNumber
 }
 
 function UpdateBranch(branch_new) {
+    console.log("Request for UpdateBranch received.");
+
     Branch.findById(branch_new._id, function (err, branch) {
         if (err) {
             console.log('ERROR in UpdateBranch' ,'error message: ' + err.message,'error name: ' + err.name);
@@ -369,11 +520,15 @@ function UpdateBranch(branch_new) {
 }
 
 function DeleteBranch(branch) {
+    console.log("Request for DeleteBranch received.");
+
     branch.isActive = false;
     UpdateBranch(branch);
 }
 
 function AddUser(pname, pusername, ppassword, ppermission, pbirthday, pwebsite, pbranch_number) {
+    console.log("Request for AddUser received.");
+
     var user = new User({
         name: pname,
         username: pusername,
@@ -394,6 +549,8 @@ function AddUser(pname, pusername, ppassword, ppermission, pbirthday, pwebsite, 
 }
 
 function AddFlower(name, description, color, image_link, price) {
+    console.log("Request for AddFlower received.");
+
     var flower = new Flower({
         name: name,
         description: description,
@@ -412,6 +569,8 @@ function AddFlower(name, description, color, image_link, price) {
 }
 
 function UpdateFlower(flower_new) {
+    console.log("Request for UpdateFlower received.");
+
     Flower.findById(flower_new._id, function (err, flower) {
         if (err) {
             console.log('ERROR in UpdateFlower' ,'error message: ' + err.message,'error name: ' + err.name);

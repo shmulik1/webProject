@@ -277,7 +277,11 @@
 		<div class="collapse navbar-collapse" id="myNavbar" ng-controller = "navBar_Controller">
 			<ul class="nav navbar-nav">
 				<li class="active"><a data-toggle="tab" href="#about">About</a></li>
+				<%if (user.authenticated && user.permission > 1) {%>
+				<li><a data-toggle="tab" href="#branchesManagement">Branches</a></li>
+				<%}else{%>
 				<li><a data-toggle="tab" href="#branches">Branches</a></li>
+				<%}%>
 				<li><a data-toggle="tab" href="#catalog">Catalog</a></li>
 				<li><a data-toggle="tab" href="#contact">Contact</a></li>
 				<%if (user.authenticated && user.permission > 1) {%>
@@ -285,7 +289,7 @@
 				<%}%>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li class="active"><a id="welcomeLine" href="#" ><span></span>
+				<li class="active"><a id="welcomeLine" ><span></span>
 						Welcome! <strong> <%= user.name%></strong></a>
 				</li>
 				<li><a id="Sign-Up-button" href="#" data-toggle="modal" data-target="#signUpModal" ><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>

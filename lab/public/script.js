@@ -139,8 +139,14 @@ scotchApp.controller('logIn_Controller', function ($scope){
                 templateUrl : 'pages/branches.html',
                 controller  : 'branchesController',
                 controllerAs : 'branches'
+            })
+
+            // route to branchesManagement page
+            .when('/branchesManagement', {
+                templateUrl: 'pages/branchesManagement.html',
+                controller  : 'branchesManagementController',
+                controllerAs : 'branchesManagement'
             });
-			
 			
     });
 
@@ -178,6 +184,43 @@ scotchApp.controller('logIn_Controller', function ($scope){
 
 
 
+    scotchApp.controller('branchesManagementController', ['$http',
+        function branchesManagementController($http) {
+            var scope = this;
+            scope.addBranch = function (branch) {
+                if (!branch || !branch.name || !branch.address || !branch.openingHours || !branch.state ){
+                    alert('Fill all the fields!');
+                }
+                $http.get('/addBranch?name=' + branch.name + '&num=' + branch.number + '&address=' + branch.address + '&h=' + branch.openingHours + '&state=' + branch.state).then(function (response) {
+                    scope.branchesList = response.data;
+                }, function (response) {
+                    alert(response.statusText + " - " + response.data + " response " + response);
+                });
+            };
+            scope.editBranch = function (branch) {
+                alert('&name=' + branch.name);
+                alert('/editBranch?branch_id=' + branch._id + '&name=' + branch.name + '&address=' + branch.address + '&h=' + branch.openingHours + '&state=' + branch.state);
+                $http.get('/editBranch?branch_id=' + branch._id + '&name=' + branch.name + '&address=' + branch.address + '&h=' + branch.openingHours + '&state=' + branch.state).then(function (response) {
+                    scope.branchesList = response.data;
+                }, function (response) {
+                    alert(response.statusText + " - " + response.data + " response " + response);
+                });
+            };
+            scope.deleteRow = function (branch) {
+                $http.get('/deleteBranch?branch_id=' + branch._id).then(function (response) {
+                    scope.branchesList = response.data;
+                }, function (response) {
+                    alert(response.statusText + " - " + response.data);
+                });
+            };
+
+            $http.get('/branchesManagement').then(function (response) {
+                scope.branchesList = response.data;
+            }, function (response) {
+                alert(response.statusText + " - " + response.data);
+            });
+        }])
+
     scotchApp.controller('catalogController', ['$http', function flowersController($http) {
         var scope = this;
 		$http.get("http://localhost:5557/flowerslist").then(function(response){
@@ -192,19 +235,19 @@ scotchApp.controller('logIn_Controller', function ($scope){
     scotchApp.controller('user_ManagementController', ['$http',
         function usersManagementController($http) {
             var scope=this;
-            scope.addClient = function(user) {
-                if (!user || !user.name || !user.username || !user.password){
-                    alert('Fill all required fields!');
-                }
-                $http.get('/addUser?name=' + user.name + '&username=' + user.username + '&password=' + user.password +
-                    '&birthday=' + user.meta.birthday + '&website=' + user.meta.website +
-                    '&branch_number=' + user.branch_number + '&permission=0')
-                    .then(function (response) {
-                        scope.usersList = response.data;
-                    }, function (response) {
-                        alert(response.statusText + " - " + response.data);
-                    });
-            };
+            //scope.addClient = function(user) {
+            //    if (!user || !user.name || !user.username || !user.password){
+            //        alert('Fill all required fields!');
+            //    }
+            //    $http.get('/addUser?name=' + user.name + '&username=' + user.username + '&password=' + user.password +
+            //        '&birthday=' + user.meta.birthday + '&website=' + user.meta.website +
+            //        '&branch_number=' + user.branch_number + '&permission=0')
+            //        .then(function (response) {
+            //            scope.usersList = response.data;
+            //        }, function (response) {
+            //            alert(response.statusText + " - " + response.data);
+            //        });
+            //};
             scope.addUser = function(user) {
                 if (!user || !user.name || !user.username || !user.password){
                     alert('Fill all required fields!');
