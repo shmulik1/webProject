@@ -18,14 +18,15 @@
 
 	<div class="container" >
 		<div class="row">
-			<div class="col-sm-4" ng-repeat= "flower in catalog.flowerslist | filter: flower.color = color">
+			<div class="col-sm-4" ng-repeat= "flower in catalog.flowerslist" ng-if="flower.color == color || !color">
 				<div class="panel panel-primary">
 					<div class="panel-heading" align="center"><strong>{{flower.name}}</strong></div>
 					<div class="panel-body">
 						<img src={{flower.image_link}} class="img-responsive" style="width:400px;height:350px;" alt="Image">
 					</div>
-					<div class="panel-footer"><h5>Price: {{flower.price}}</h5></div>
-					<div class="panel-footer" style="overflow: scroll;max-height: 120px">{{flower.description}}</div>
+					<div class="panel-footer"><h5><strong>Price: </strong>{{flower.price}}</h5></div>
+					<div class="panel-footer"><h5><strong>Color: </strong>{{flower.color}}</h5></div>
+					<div class="panel-footer" style="overflow: scroll;max-height: 120px"><strong>Description: </strong>{{flower.description}}</div>
 				</div>
 			</div>
 		</div>

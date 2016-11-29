@@ -1,12 +1,15 @@
 <body ng-controller="branchesController">
 	<div class="container">
-		<h2>Choose State</h2>
+		<h2>Choose District</h2>
 		<form class="form-horizontal">
 			<select ng-model="state" class="col-sm-4">
-				<option value = "" >All</option>
-				<option value = "north" >North</option>
-				<option value = "south" >South</option>
-				<option value = "dan" >Dan</option>
+				<option value = ''>All</option>
+				<option value='North'>North</option>
+				<option value='Haifa'>Haifa</option>
+				<option value='Tel_Aviv'>Tel Aviv</option>
+				<option value='Central'>Central</option>
+				<option value='Jerusalem'>Jerusalem</option>
+				<option value='South'>South</option>
 			</select>
 		</form>
     </div>
@@ -15,12 +18,13 @@
 <!-- container -->
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-6" ng-repeat="branch in branches.brancheslist | filter: branch.state = state">
+			<div class="col-sm-6" ng-repeat="branch in branches.brancheslist"  ng-if="branch.state == state || !state">
 				<div class="panel panel-primary">
 					<div class="panel-heading" align="center"><strong>{{branch.name}}</strong></div>
 					<div class="panel-body" align="center"><h5><strong>Address:</strong> {{branch.address}}</h5></div>
 					<div class="panel-footer" align="center"><h5><strong>Phone Number:</strong> {{branch.phoneNumber}}</h5></div>
 					<div class="panel-footer" align="center"><h5><strong>Opening Hours:</strong> {{branch.openingHours}}</h5></div>
+					<div class="panel-footer" align="center"><h5><strong>District:</strong> {{branch.state}}</h5></div>
 				</div>
 			</div>
 		</div>

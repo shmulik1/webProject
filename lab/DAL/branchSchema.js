@@ -1,17 +1,19 @@
 var mongo = require('mongoose');
 var Schema = mongo.Schema;
 
+
 var branchSchema = new Schema({
     name: String,
     number: Number,
     address: String,
-    state: String,
+    state: {type: String, enum:['North', 'Haifa', 'Tel_Aviv', 'Central', 'Jerusalem', 'South']},
     isActive: Boolean,
     openingHours: String,
     phoneNumber: String,
     created_at: Date,
     updated_at: Date
 });
+
 branchSchema.pre('save',function (next) {
     // get the current date
     var currentDate = new Date();
@@ -22,5 +24,6 @@ branchSchema.pre('save',function (next) {
         this.created_at = currentDate;
     next();
 });
+
 var Branch = mongo.model('Branch', branchSchema);
 module.exports = Branch;

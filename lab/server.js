@@ -30,6 +30,7 @@ var Permission = User.permission;
 var app = express();
 
 
+
 // create the schema:
 Branch.find({}, function (err, branches) {
     if (err) {
@@ -37,13 +38,13 @@ Branch.find({}, function (err, branches) {
         throw err.message;
     }
     if (branches.length == 0){
-        AddBranch('S and Y Rishon-Leziyon', 1, 'Sigalit 1 Rishon Leziyon', 'dan', '08:00-19:00', '03-5701234');
-        AddBranch('S and Y Jerusalem', 2, 'Nurit 2 Jerusalem', 'south', '08:00-19:00', '02-6418187');
-        AddBranch('S and Y Tel-Aviv', 3, 'Narkis 3 TLV', 'dan', '08:00-19:00', '03-6771234');
-        AddBranch('S and Y Naria', 4, 'Havazelet 4 Naarya', 'north', '08:00-19:00', '04-5781234');
-        AddBranch('S and Y Petah-Tikva', 5, 'Yakinton 5 Petah Tikva', 'dan', '08:00-19:00', '03-6191234');
-        AddBranch('S and Y Eilat', 6, 'Vered 6 Eilat', 'south', '08:00-19:00', '08-6128877');
-        AddBranch('S and Y Ashdod', 7, 'Rakefet 7 Ashdod', 'dan', '08:00-19:00', '09-9326543');
+        AddBranch('S and Y Rishon-Leziyon', 1, 'Sigalit 1 Rishon Leziyon', 'Central', '08:00-19:00', '03-5701234');
+        AddBranch('S and Y Jerusalem', 2, 'Nurit 2 Jerusalem', 'Jerusalem', '08:00-19:00', '02-6418187');
+        AddBranch('S and Y Tel-Aviv', 3, 'Narkis 3 TLV', 'Tel_Aviv', '08:00-19:00', '03-6771234');
+        AddBranch('S and Y Naria', 4, 'Havazelet 4 Naarya', 'North', '08:00-19:00', '04-5781234');
+        AddBranch('S and Y Petah-Tikva', 5, 'Yakinton 5 Petah Tikva', 'Central', '08:00-19:00', '03-6191234');
+        AddBranch('S and Y Eilat', 6, 'Vered 6 Eilat', 'South', '08:00-19:00', '08-6128877');
+        AddBranch('S and Y Ashdod', 7, 'Rakefet 7 Ashdod', 'Central', '08:00-19:00', '09-9326543');
     }
 });
 

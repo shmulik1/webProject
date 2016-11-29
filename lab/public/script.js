@@ -172,7 +172,7 @@ scotchApp.controller('logIn_Controller', function ($scope){
 
 
 
-	scotchApp.controller('branchesController', ['$http',
+scotchApp.controller('branchesController', ['$http',
         function branchesController($http) {
             var scope = this;
             $http.get("http://localhost:5557/branches").then(function (response) {
@@ -188,7 +188,7 @@ scotchApp.controller('logIn_Controller', function ($scope){
         function branchesManagementController($http) {
             var scope = this;
             scope.addBranch = function (branch) {
-                alert('/addBranch?name=' + branch.name + '&number=' + branch.number + '&address=' + branch.address + '&hours=' + branch.openingHours + '&state=' + branch.state);
+                //alert('/addBranch?name=' + branch.name + '&number=' + branch.number + '&address=' + branch.address + '&hours=' + branch.openingHours + '&state=' + branch.state);
                 if (!branch || !branch.name || !branch.address || !branch.openingHours || !branch.state ){
                     alert('Fill all the fields!');
                 }
